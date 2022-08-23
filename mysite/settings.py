@@ -36,14 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'blog.apps.BlogConfig',
     'rest_framework',
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
-=======
     'empresa.apps.EmpresaConfig',
->>>>>>> 463f78c (base de datos django con conexion a mysql)
 ]
 
 MIDDLEWARE = [

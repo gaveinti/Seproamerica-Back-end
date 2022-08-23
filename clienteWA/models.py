@@ -11,4 +11,6 @@ class ClienteRegistro(models.Model):
     telefono = models.IntegerField(default="")
     contrasenha = models.CharField(max_length=70, blank=False, default='')
 
-    
+class ClienteInicioSesion(models.Model):
+    correo = models.CharField(max_length=70, blank=False, default='')
+    contrasenha = models.CharField(max_length=70, blank=False, default='')

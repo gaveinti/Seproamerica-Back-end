@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from clienteWA.models import ClienteRegistro
+from clienteWA.models import ClienteInicioSesion, ClienteRegistro
  
  
 class ClienteRegistroSerializer(serializers.ModelSerializer):
@@ -14,3 +14,11 @@ class ClienteRegistroSerializer(serializers.ModelSerializer):
                   'correo',
                   'telefono',
                   'contrasenha')
+
+class ClienteInicioSesionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ClienteInicioSesion
+        fields = (
+            'correo',
+            'contrasenha'  )
