@@ -36,10 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'blog.apps.BlogConfig',
     'rest_framework',
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
+=======
+    'empresa.apps.EmpresaConfig',
+>>>>>>> 463f78c (base de datos django con conexion a mysql)
 ]
 
 MIDDLEWARE = [
@@ -86,7 +90,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seproamericaDB1',
+        'NAME': 'seproamericaDB',
         'USER': 'root',
         'PASSWORD': 'centro234',
         'HOST': 'localhost',
