@@ -7,6 +7,8 @@ from rest_framework import status
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser 
 from rest_framework.decorators import api_view
+# Para agregar mensaje y verificar la conexion
+from django.contrib import messages
 
 from clienteWA.models import ClienteInicioSesion, ClienteRegistro
 from clienteWA.serializers import ClienteInicioSesionSerializer, ClienteRegistroSerializer

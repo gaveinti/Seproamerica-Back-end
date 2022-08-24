@@ -57,7 +57,7 @@ MIDDLEWARE = [
 # Next, set CORS_ORIGIN_ALLOW_ALL and add the host to CORS_ORIGIN_WHITELIST:
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8081',
+    'http://localhost:4200',
 )
 
 ROOT_URLCONF = 'mysite.urls'
@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seproamericaDB',
         'USER': 'root',
-        'PASSWORD': 'centro234',
+        'PASSWORD': 'emelec',
         'HOST': 'localhost',
         'PORT': '3306',
     }
