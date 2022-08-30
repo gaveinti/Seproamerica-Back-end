@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seproamericaDB',
         'USER': 'root',
-        'PASSWORD': 'centro234',
+        'PASSWORD': 'emelec',
         'HOST': 'localhost',
         'PORT': '3306',
     }
