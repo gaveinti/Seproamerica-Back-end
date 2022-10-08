@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from clienteWA.models import ClienteInicioSesion, ClienteRegistro
- 
+ # Prueba integracion #182724927
  
 class ClienteRegistroSerializer(serializers.ModelSerializer):
  
