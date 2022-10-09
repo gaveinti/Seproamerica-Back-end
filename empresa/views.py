@@ -14,7 +14,7 @@ from empresa.models import usuario
 from empresa.serializers import UsuarioSerializer
 
 # Create your views here.
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @csrf_exempt
 def usuarioRegistro(request):
     #registrar un nuevo usuario
@@ -25,21 +25,39 @@ def usuarioRegistro(request):
             usuarioARegistrar_Serializer.save()
             return JsonResponse(usuarioARegistrar_Serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(usuarioARegistrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'GET':
+        usuarios = usuario.objects.all()
+        
+        nombre = request.GET.get('nombres', None)
+        if nombre is not None:
+            usuarios = usuarios.filter(nombre_icontains=nombre)
+        usuarios_serializer = UsuarioSerializer(usuarios, many=True)
+        return JsonResponse(usuarios_serializer.data, safe=False)
 
 #Función para obtener datos de un usuario para validacion en inicio sesion
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 @csrf_exempt
-def usuarioInicioSesion(request, pk, *args):
+def usuarioInicioSesion(request, correo):
     #pk = self.kwargs.get('pk')
-    #Encontrar usuario por pk (correo)
-    print(usuario.objects.get())
+    #Encontrar usuario por pk (cedula)
+    #print(usuario.objects.get())
 
     try:
-        usuarioAEncontrar = usuario.objects.get(pk = pk)
+        usuarioAEncontrar = usuario.objects.get(correo)
+
+        #mandar datos para validación
+        if request.method == 'GET':
+            usuarioAEncontrar_serializer = UsuarioSerializer(usuarioAEncontrar) #El del final es el modelo
+            return JsonResponse(usuarioAEncontrar_serializer.data)
+        elif request.method == 'PUT':
+            usuarioAEncontrar_data = JSONParser().parse(request)
+            usuarioAEncontrar_serializer = UsuarioSerializer(usuarioAEncontrar, data=usuarioAEncontrar_data)
+            if usuarioAEncontrar_serializer.is_valid():
+                usuarioAEncontrar_serializer.save()
+                return JsonResponse(usuarioAEncontrar_serializer.data)
+            return JsonResponse(usuarioAEncontrar_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     except usuario.DoesNotExist:
         return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
 
-    #mandar datos para validación
-    if request.method == 'GET':
-        usuarioAEncontrar_serializer = UsuarioSerializer(usuarioAEncontrar) #El del final es el modelo
-        return JsonResponse(usuarioAEncontrar_serializer.data)
