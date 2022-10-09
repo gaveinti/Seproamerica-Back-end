@@ -38,13 +38,13 @@ def usuarioRegistro(request):
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])
 @csrf_exempt
-def usuarioInicioSesion(request, correo):
+def usuarioInicioSesion(request, correoU):
     #pk = self.kwargs.get('pk')
     #Encontrar usuario por pk (cedula)
     #print(usuario.objects.get())
 
     try:
-        usuarioAEncontrar = usuario.objects.get(correo)
+        usuarioAEncontrar = usuario.objects.get(correo=correoU)
 
         #mandar datos para validación
         if request.method == 'GET':
