@@ -88,11 +88,10 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seproamericaDB',
-        'USER': 'root',
-        'PASSWORD': 'Admin',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': 'seproamerica2022$seproamericadb',
+        'USER': 'seproamerica2022',
+        'PASSWORD': 'sepro.desarrollo2022',
+        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
     }
 }
 
