@@ -88,9 +88,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seproamericaDB',
+        'NAME': 'seproamericadb1',
         'USER': 'root',
-        'PASSWORD': 'Admin',
+        'PASSWORD': 'centro234',
         'HOST': 'localhost',
         'PORT': '3306',
     }

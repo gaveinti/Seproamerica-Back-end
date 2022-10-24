@@ -5,7 +5,6 @@ import sys
 from datetime import date
 import mysql.connector
 import logging
-#def verProductos():
 
 def main():
     
