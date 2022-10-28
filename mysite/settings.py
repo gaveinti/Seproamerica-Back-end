@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-x4$6a5zr*w7z)8i)j@ud3z_#8b%oj_ndfx3-7ja4n)_byd_&x5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-#ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '190.131.29.88']
+#ALLOWED_HOSTS = ['127.0.0.1', 'pythonanywhere.com', '190.131.29.88']
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -63,7 +63,9 @@ MIDDLEWARE = [
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200',
-    'http://121.0.0.1:8000'
+    'http://121.0.0.1:8000',
+    'https://seproamerica2022.pythonanywhere.com'
+
 )
 
 ROOT_URLCONF = 'mysite.urls'
