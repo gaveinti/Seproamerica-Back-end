@@ -23,4 +23,5 @@ urlpatterns = [
     #re_path(r'^', include('clienteWA.urls')),
     path('api/auth/', include('rest_framework.urls')),
     re_path(r'^', include('empresa.urls')),
+    re_path(r'^', include("chat.urls")),
 ]

@@ -15,6 +15,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#AUTH_USER_MODEL = 'empresa.models.usuario'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -25,7 +27,8 @@ SECRET_KEY = 'django-insecure-x4$6a5zr*w7z)8i)j@ud3z_#8b%oj_ndfx3-7ja4n)_byd_&x5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '190.131.29.88']
+#ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '190.131.29.88']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
     'empresa.apps.EmpresaConfig',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -56,9 +60,10 @@ MIDDLEWARE = [
 ]
 
 # Next, set CORS_ORIGIN_ALLOW_ALL and add the host to CORS_ORIGIN_WHITELIST:
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200',
+    'http://121.0.0.1:8000'
 )
 
 ROOT_URLCONF = 'mysite.urls'
@@ -88,22 +93,22 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
-        'NAME': 'seproamericadb1',
+        'NAME': 'seproamericadb',
         'USER': 'root',
-        'PASSWORD': 'centro234',
+        'PASSWORD': 'Admin',
         'HOST': 'localhost',
         'PORT': '3306',
-=======
-        'NAME': 'seproamerica2022$seproamericadb',
+
+        
+    }
+}
+'''
+'NAME': 'seproamerica2022$seproamericadb',
         'USER': 'seproamerica2022',
         'PASSWORD': 'Admin2022',
         'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
         #'PORT': '3306',
->>>>>>> 972f174f37730c7a22d0319c8c64a407dfb5eaf4
-    }
-}
-
+'''
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

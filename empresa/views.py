@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import FileUploadParser
@@ -34,7 +35,6 @@ def usuarioRegistro(request):
             usuarios = usuarios.filter(nombre_icontains=nombre)
         usuarios_serializer = UsuarioSerializer(usuarios, many=True)
         return JsonResponse(usuarios_serializer.data, safe=False)
-
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])
 @csrf_exempt
@@ -42,20 +42,23 @@ def usuarioInicioSesion(request, correoU):
     #pk = self.kwargs.get('pk')
     #Encontrar usuario por pk (cedula)
     #print(usuario.objects.get())
-
     try:
         usuarioAEncontrar = usuario.objects.get(correo=correoU)
 
         #mandar datos para validación
         if request.method == 'GET':
             usuarioAEncontrar_serializer = UsuarioSerializer(usuarioAEncontrar) #El del final es el modelo
+            request.session["USER_LOGGED"] = usuarioAEncontrar_serializer.data
             return JsonResponse(usuarioAEncontrar_serializer.data)
         elif request.method == 'PUT':
             usuarioAEncontrar_data = JSONParser().parse(request)
             usuarioAEncontrar_serializer = UsuarioSerializer(usuarioAEncontrar, data=usuarioAEncontrar_data)
             if usuarioAEncontrar_serializer.is_valid():
                 usuarioAEncontrar_serializer.save()
+
+
                 return JsonResponse(usuarioAEncontrar_serializer.data)
+                
             return JsonResponse(usuarioAEncontrar_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     except usuario.DoesNotExist:
