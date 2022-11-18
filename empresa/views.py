@@ -14,6 +14,10 @@ from django.contrib import messages
 from empresa.models import usuario
 from empresa.serializers import UsuarioSerializer
 
+
+
+
+
 # Create your views here.
 @api_view(['GET', 'POST'])
 @csrf_exempt
