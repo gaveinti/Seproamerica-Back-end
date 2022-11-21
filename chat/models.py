@@ -127,6 +127,7 @@ class CanalManager(models.Manager):
             return None, False
 
         obj_canal = Canal.objects.create(servicio=servicio)
+        print(servicio)
 
         canal_usuario_a = CanalUsuario(usuario=usuario_a, canal=obj_canal)
         canal_usuario_b = CanalUsuario(usuario=usuario_b, canal=obj_canal)
@@ -173,8 +174,8 @@ class CanalManager(models.Manager):
 
 class Canal(ModelBase):
     # para 1 o mas usuarios conectados
-    servicio_CHOICES = (("Custodia Armada", "Custodia Armada"), ("Transporte de productos", "Transporte de productos"),
-                        ("Chofer seguro", "Chofer seguro"), ("Guardia de seguridad", "Guardia de seguridad"))
+    servicio_CHOICES = (("Custodia", "Custodia Armada"), ("Transporte", "Transporte de productos"),
+                        ("Chofer", "Chofer seguro"), ("Guardia", "Guardia de seguridad"))
     servicio = models.CharField(max_length=23, choices=servicio_CHOICES)
     usuarios = models.ManyToManyField(User, blank=True, through=CanalUsuario)
     objects = CanalManager()
