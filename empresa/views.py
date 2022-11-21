@@ -11,8 +11,8 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario
-from empresa.serializers import UsuarioSerializer
+from empresa.models import usuario,mobil
+from empresa.serializers import UsuarioSerializer, MobilSerializer
 
 
 
@@ -68,3 +68,17 @@ def usuarioInicioSesion(request, correoU):
     except usuario.DoesNotExist:
         return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+def mobilRegistro(request):
+    #registrar un nuevo usuario
+
+    if request.method == 'GET':
+        mobils = mobil.objects.all()
+        
+        numeroCell = request.GET.get('numeroCell', None)
+        if numeroCell is not None:
+            mobils = mobils.filter(numeroCell_icontains=numeroCell)
+        mobils_serializer = MobilSerializer(mobils, many=True)
+        return JsonResponse(mobils_serializer.data, safe=False)
