@@ -59,6 +59,7 @@ def verificar_y_crear_canal(request,servicio,usuario_receptor,usuario_actual):
 
         
         mensajes=CanalMensaje.obtener_data_mensaje_usuarios(canal.id)
+        print("servicio",canal.servicio)
         return JsonResponse({
             'canal':canal.id,
             'servicio':canal.servicio,
