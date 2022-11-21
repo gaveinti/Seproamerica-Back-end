@@ -69,7 +69,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://121.0.0.1:8000',
     'ws://localhost:8000',
 
-    'ws://seproamerica2022.pythonanywhere.com'
+    'ws://seproamerica2022.pythonanywhere.com',
     'https://seproamerica2022.pythonanywhere.com'
 
 )
