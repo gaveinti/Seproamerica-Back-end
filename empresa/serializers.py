@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from empresa.models import usuario, personalAdministrativo, personalOperativo 
+from empresa.models import usuario, personalAdministrativo, personalOperativo, mobil 
 class UsuarioSerializer(serializers.ModelSerializer):
  
     class Meta:
@@ -51,4 +51,16 @@ class PersonalOperativoSerializer(serializers.ModelSerializer):
                   'sucursal',
                   'estado',
                   #'rol'
+                  )
+
+class MobilSerializer(serializers.ModelSerializer):
+ 
+    class Meta:
+        model = mobil
+        fields = ('numeroCell',
+                  'idEquipamiento',
+                  'marca',
+                  'color',
+                  'usuarioApp',
+                  'contrasenia',
                   )

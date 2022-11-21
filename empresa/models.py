@@ -129,6 +129,9 @@ class mobil(models.Model):
     idEquipamiento = models.ForeignKey(equipamiento, on_delete=models.CASCADE)
     marca = models.CharField(max_length=20)
     color = models.CharField(max_length=20)
+    usuarioApp = models.CharField(max_length=25)
+    contrasenia = models.CharField(max_length=15)
+
 
 class vehiculo(models.Model):
     placa = models.CharField(max_length=10,primary_key=True)
