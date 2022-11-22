@@ -8,4 +8,6 @@ urlpatterns = [
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
 
     re_path(r'^api/mobilRegistro$', views.mobilRegistro),
+    re_path(r'^api/mobilInicioSesion$', views.mobilInicioSesion),
+    re_path(r'^api/mobilInicioSesion/(?P<UsuarioApp>\w+/$', views.mobilInicioSesion),
 ]

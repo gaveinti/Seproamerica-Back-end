@@ -39,6 +39,8 @@ def usuarioRegistro(request):
             usuarios = usuarios.filter(nombre_icontains=nombre)
         usuarios_serializer = UsuarioSerializer(usuarios, many=True)
         return JsonResponse(usuarios_serializer.data, safe=False)
+
+
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])
 @csrf_exempt
@@ -82,3 +84,33 @@ def mobilRegistro(request):
             mobils = mobils.filter(numeroCell_icontains=numeroCell)
         mobils_serializer = MobilSerializer(mobils, many=True)
         return JsonResponse(mobils_serializer.data, safe=False)
+
+
+        
+#Función para obtener datos de un usuario para validacion en inicio sesion
+@api_view(['GET', 'PUT'])
+@csrf_exempt
+def mobilInicioSesion(request, UsuarioApp):
+
+    try:
+        usuarioAppMobil = usuario.objects.get(UsuarioApp=UsuarioApp)
+
+        #mandar datos para validación
+        if request.method == 'GET':
+            usuarioAppMobil_serializer = UsuarioSerializer(usuarioAppMobil) #El del final es el modelo
+            request.session["USER_LOGGED"] = usuarioAppMobil_serializer.data
+            return JsonResponse(usuarioAppMobil_serializer.data)
+            
+        elif request.method == 'PUT':
+            usuarioAppMobil_data = JSONParser().parse(request)
+            usuarioAppMobil_serializer = UsuarioSerializer(usuarioAppMobil, data=usuarioAppMobil_data)
+            if usuarioAppMobil_serializer.is_valid():
+                usuarioAppMobil_serializer.save()
+
+
+                return JsonResponse(usuarioAppMobil_serializer.data)
+                
+            return JsonResponse(usuarioAppMobil_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except usuario.DoesNotExist:
+        return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
