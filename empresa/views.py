@@ -93,7 +93,7 @@ def mobilRegistro(request):
 def mobilInicioSesion(request, UsuarioApp):
 
     try:
-        usuarioAppMobil = usuario.objects.get(UsuarioApp=UsuarioApp)
+        usuarioAppMobil = mobil.objects.get(UsuarioApp=UsuarioApp)
 
         #mandar datos para validación
         if request.method == 'GET':
