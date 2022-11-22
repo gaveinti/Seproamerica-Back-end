@@ -90,20 +90,20 @@ def mobilRegistro(request):
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])
 @csrf_exempt
-def mobilInicioSesion(request, usuarioApp):
+def mobilInicioSesion(request, UsuarioApp):
 
     try:
-        usuarioAppMobil = mobil.objects.get(usuarioApp=usuarioApp)
+        usuarioAppMobil = mobil.objects.get(usuarioApp=UsuarioApp)
 
         #mandar datos para validación
         if request.method == 'GET':
-            usuarioAppMobil_serializer = UsuarioSerializer(usuarioAppMobil) #El del final es el modelo
+            usuarioAppMobil_serializer = MobilSerializer(usuarioAppMobil) #El del final es el modelo
             request.session["USER_LOGGED"] = usuarioAppMobil_serializer.data
             return JsonResponse(usuarioAppMobil_serializer.data)
             
         elif request.method == 'PUT':
             usuarioAppMobil_data = JSONParser().parse(request)
-            usuarioAppMobil_serializer = UsuarioSerializer(usuarioAppMobil, data=usuarioAppMobil_data)
+            usuarioAppMobil_serializer = MobilSerializer(usuarioAppMobil, data=usuarioAppMobil_data)
             if usuarioAppMobil_serializer.is_valid():
                 usuarioAppMobil_serializer.save()
 
