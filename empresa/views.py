@@ -90,10 +90,10 @@ def mobilRegistro(request):
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])
 @csrf_exempt
-def mobilInicioSesion(request, UsuarioApp):
+def mobilInicioSesion(request, usuarioApp):
 
     try:
-        usuarioAppMobil = mobil.objects.get(UsuarioApp=UsuarioApp)
+        usuarioAppMobil = mobil.objects.get(usuarioApp=usuarioApp)
 
         #mandar datos para validación
         if request.method == 'GET':
