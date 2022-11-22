@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CanalMensaje,CanalUsuario,Canal
+from .models import CanalMensaje,CanalUsuario,Canal,Mensaje
 
 # Register your models here.
 
@@ -24,5 +24,7 @@ class CanalAdmin(admin.ModelAdmin):
 admin.site.register(Canal,CanalAdmin)
 admin.site.register(CanalUsuario)
 admin.site.register(CanalMensaje)
+
+admin.site.register(Mensaje)
 
 

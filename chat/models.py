@@ -13,6 +13,14 @@ User = usuario
 # Create your models here.
 
 
+
+
+
+
+
+
+
+
 class ModelBase(models.Model):
     id = models.UUIDField(default=uuid.uuid4,
                           primary_key=True, db_index=True, editable=False)
@@ -23,41 +31,56 @@ class ModelBase(models.Model):
         abstract = True
 
 
+
+class Mensaje(models.Model):
+    canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    
+
+
+
+
+
 class CanalMensaje(ModelBase):
     canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.TextField()
 
+
+
     def obtener_data_mensaje_usuarios(id_canal):
         qs = CanalMensaje.objects.filter(
-            canal_id=id_canal).values("texto", "usuario", "tiempo")
+            canal_id=id_canal).values("canal__servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
         usuarios_Canal = Canal.objects.filter(
             id=id_canal).values("canalusuario__usuario__correo")
 
+        data=Canal.objects.filter(id=id_canal).values(
+            "id",
+            "canalmensaje__texto",
+            "tiempo",
+            "canalmensaje__usuario__correo",
+            "canalusuario__usuario__rol",
+            "canalusuario__usuario__correo"
+            
+
+        ).order_by("tiempo")
+
+        print("CONSULTAA",data)
         mensajes = list(qs.order_by("tiempo"))
         # mensajes=Canal.objects.obtener_todos_mensajes_por_canal(id_canal)
         for sms in mensajes:
-            t = sms["tiempo"]
-            tiempo_envio = "%s:%s:%s" % (t.hour, t.minute, t.second)
-            fecha_envio = "%s/%s/%s" % (t.day, t.month, t.year)
-
-            nombre = usuario.objects.filter(
-                cedula=sms["usuario"]).first().nombres
-            apellido = usuario.objects.filter(
-                cedula=sms["usuario"]).first().apellidos
-            correo = usuario.objects.filter(
-                cedula=sms["usuario"]).first().correo
-            rol = usuario.objects.filter(correo=correo).first().rol
+            data_usuario=usuario.objects.filter(cedula=sms["usuario"]).values().first()
+            nombre = data_usuario["nombres"]
+            apellido = data_usuario["apellidos"]
             perfil = nombre+" "+apellido
             sms["nombre_perfil"] = perfil
-            sms["tiempo_envio"] = tiempo_envio
-            sms["fecha_envio"] = fecha_envio
-            sms["correo_usuario"] = correo
             sms["usuarios_canal"] = [usuarios_Canal[0]["canalusuario__usuario__correo"],
                                      usuarios_Canal[1]["canalusuario__usuario__correo"]]
-            sms["rol"] = rol.idRol
 
         return list(mensajes)
+
+
 
     def __str__(self):
         return str(self.canal)
@@ -80,13 +103,13 @@ class CanalQuerySet(models.QuerySet):
         return self.annotate(num_usuarios=Count("usuarios")).filter(num_usuarios=2)
 
     def filtrar_por_username(self, username):
-        print("entroooooo")
-        qs = CanalUsuario.objects.filter(usuario=username)
         return self.filter(canalusuario__usuario__correo=username)
 
     def filtrar_por_servicio(self, _servicio, usuario_a, usuario_b):
-
         return self.filtrar_por_username(usuario_a).filtrar_por_username(usuario_b).filter(servicio=_servicio)
+    
+
+
 
 
 class CanalManager(models.Manager):
@@ -96,52 +119,37 @@ class CanalManager(models.Manager):
     def filtrar_ms_por_privado(self, username_a, username_b, servicio):
         return self.get_queryset().solo_dos().filtrar_por_servicio(servicio, username_a, username_b)
 
-    def obtener_o_crear_canal_usuario_actual(self, user):
-        qs = self.get_queryset().solo_uno().filtrar_por_username(user.correo)
 
-        if qs.exists():
-            return qs.order_by("tiempo").first(), False
-        canal_obj = Canal.objects.create()
-        CanalUsuario.objects.create(usuario=user, canal=canal_obj)
-        return canal_obj, True
 
     def obtener_o_crear_canal_ms(self, username_a, username_b, servicio):
         qs = self.filtrar_ms_por_privado(username_a, username_b, servicio)
         if qs.exists():
             return qs.order_by("tiempo").first(), False  # obj, Created
-        User = usuario
+
         usuario_a, usuario_b = None, None
 
         try:
-            usuario_a = User.objects.get(correo=username_a)
-        except User.DoesNotExist:
+            usuario_a = usuario.objects.get(correo=username_a)
+        except usuario.DoesNotExist:
             return None, False
 
         try:
-            usuario_b = User.objects.get(correo=username_b)
+            usuario_b = usuario.objects.get(correo=username_b)
 
-        except User.DoesNotExist:
+        except usuario.DoesNotExist:
             return None, False
 
         if (usuario_a == None or usuario_b == None):
             return None, False
 
         obj_canal = Canal.objects.create(servicio=servicio)
-        print(servicio)
-
         canal_usuario_a = CanalUsuario(usuario=usuario_a, canal=obj_canal)
         canal_usuario_b = CanalUsuario(usuario=usuario_b, canal=obj_canal)
         CanalUsuario.objects.bulk_create([canal_usuario_a, canal_usuario_b])
 
         return obj_canal, True
 
-    def obtener_mensajes_por_canal(self, canal_id):
-        datos_procesados = []
-
-        # ms=CanalMensaje.objects.filter(canal_id=str(canal["id"])).values("tiempo","texto","usuario_id").first()
-        pass
-
-    def obtener_todos_los_canales(self):
+    '''def obtener_todos_los_canales(self):
         datos_procesados = []
         qs = Canal.objects.all().values("id").order_by("tiempo")
 
@@ -170,6 +178,12 @@ class CanalManager(models.Manager):
                 datos_procesados.append(data)
 
         return datos_procesados
+
+
+'''
+    def obtener_datos_usuario(id_usuario):
+        qs =usuario.objects.filter(cedula=id_usuario)  
+        return qs
 
 
 class Canal(ModelBase):
