@@ -103,6 +103,15 @@ CHANNEL_LAYERS = {
     }
 }
 
+'''CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}'''
+
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -110,11 +119,11 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seproamerica2022$seproamericadb',
-        'USER': 'seproamerica2022',
-        'PASSWORD': 'Admin2022',
-        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
-        #'PORT': '3306',
+        'NAME': 'seproamericadb',
+        'USER': 'root',
+        'PASSWORD': 'Admin',
+        'HOST': 'localhost',
+        'PORT': '3306', 
 
     }
 }
