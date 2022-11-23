@@ -49,34 +49,13 @@ class CanalMensaje(ModelBase):
 
 
 
+
+
     def obtener_data_mensaje_usuarios(id_canal):
         qs = CanalMensaje.objects.filter(
             canal_id=id_canal).values("canal__servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
-        usuarios_Canal = Canal.objects.filter(
-            id=id_canal).values("canalusuario__usuario__correo")
 
-        data=Canal.objects.filter(id=id_canal).values(
-            "id",
-            "canalmensaje__texto",
-            "tiempo",
-            "canalmensaje__usuario__correo",
-            "canalusuario__usuario__rol",
-            "canalusuario__usuario__correo"
-            
-
-        ).order_by("tiempo")
-
-        print("CONSULTAA",data)
         mensajes = list(qs.order_by("tiempo"))
-        # mensajes=Canal.objects.obtener_todos_mensajes_por_canal(id_canal)
-        for sms in mensajes:
-            data_usuario=usuario.objects.filter(cedula=sms["usuario"]).values().first()
-            nombre = data_usuario["nombres"]
-            apellido = data_usuario["apellidos"]
-            perfil = nombre+" "+apellido
-            sms["nombre_perfil"] = perfil
-            sms["usuarios_canal"] = [usuarios_Canal[0]["canalusuario__usuario__correo"],
-                                     usuarios_Canal[1]["canalusuario__usuario__correo"]]
 
         return list(mensajes)
 
@@ -149,38 +128,7 @@ class CanalManager(models.Manager):
 
         return obj_canal, True
 
-    '''def obtener_todos_los_canales(self):
-        datos_procesados = []
-        qs = Canal.objects.all().values("id").order_by("tiempo")
-
-        lista_canales = list(qs)
-
-        for canal in lista_canales:
-
-            ms = CanalMensaje.objects.filter(canal_id=str(canal["id"])).values(
-                "tiempo", "texto", "usuario_id").first()
-            if (True):
-                p_usuario = usuario.objects.filter(cedula=str(ms["usuario_id"])).first(
-                ).nombres+" " + usuario.objects.filter(cedula=str(ms["usuario_id"])).first().apellidos
-
-                t = ms["tiempo"]
-                tiempo_envio = "%s:%s:%s" % (t.hour, t.month, t.second)
-                fecha_envio = "%s/%s/%s" % (t.day, t.month, t.year)
-                data = {
-                    'usuario': p_usuario,
-                    "id_canal": canal["id"],
-                    "id_usuario": ms["usuario_id"],
-                    'ultimo_mensaje': ms["texto"],
-                    "tiempo_envio": tiempo_envio,
-                    "fecha_envio": fecha_envio,
-                }
-
-                datos_procesados.append(data)
-
-        return datos_procesados
-
-
-'''
+    
     def obtener_datos_usuario(id_usuario):
         qs =usuario.objects.filter(cedula=id_usuario)  
         return qs

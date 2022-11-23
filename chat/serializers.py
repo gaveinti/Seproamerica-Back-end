@@ -7,5 +7,4 @@ class MensajeSerializer(serializers.ModelSerializer):
         model = Mensaje
         fields = ('canal',
                   'usuario'
-                  
                   )

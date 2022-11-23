@@ -81,33 +81,43 @@ def obtener_canales_usuario_actual(request,usuario_actual):
         return JsonResponse({"mensaje":"No esta autenticado","status":"Error"})
 
 
-    canales_p=Canal.objects.filter(usuarios__correo=usuario_actual).values("id","servicio","canalmensaje__texto")
-    print("CANALEEEEEES ",canales_p )
-
     canales_s=Canal.objects.filter(usuarios__correo=usuario_actual).values("id","servicio")
 
     canales_s=list(canales_s.order_by("tiempo"))
     canales_con_todos_los_mensajes_por_usuario=[]
     for canal in canales_s:
+
+        usuarios_Canal = list(Canal.objects.filter(id=canal["id"]).values(
+            "canalusuario__usuario__correo",
+            "canalusuario__usuario__nombres",
+            "canalusuario__usuario__apellidos"
+            ))
+        usuarios_canal = [
+            [
+            usuarios_Canal[0]["canalusuario__usuario__correo"],  
+            usuarios_Canal[0]["canalusuario__usuario__nombres"]+" "+usuarios_Canal[0]["canalusuario__usuario__apellidos"],
+
+        ],
+            [
+            usuarios_Canal[1]["canalusuario__usuario__correo"],  
+            usuarios_Canal[1]["canalusuario__usuario__nombres"]+" "+usuarios_Canal[1]["canalusuario__usuario__apellidos"],
+
+            ]
+            
+        ]
+  
+
         mensajes=CanalMensaje.obtener_data_mensaje_usuarios(canal["id"])
         
         canales_con_todos_los_mensajes_por_usuario.append(
-            {'CANAL_ID':canal["id"],'servicio':canal["servicio"],'mensajes':mensajes}
+            {'CANAL_ID':canal["id"],'usuarios_canal':usuarios_canal,'servicio':canal["servicio"],'mensajes':mensajes}
         )
     #print(canales_con_todos_los_mensajes_por_usuario)
    
     return JsonResponse(canales_con_todos_los_mensajes_por_usuario,safe=False)
 
 
-'''
-@csrf_exempt
-def get_all_mensajes(request):
-    if request.method == 'GET':
-        #mensajes= CanalMensaje.obtener_data_formato_general()
-        mensajes= Canal.objects.obtener_todos_los_canales()
-        return JsonResponse({'mensajes': mensajes})
 
-'''
 
 @api_view(['GET', 'POST'])
 @csrf_exempt
@@ -123,27 +133,5 @@ def obtener_mensajes(request):
             'mensajes':mensajes_serializer.data}, 
             safe=False)
 
-@api_view(['GET', 'POST'])
-@csrf_exempt
-def obtener_mensajes_pr(request):
-    if request.method == 'GET':
-        
-    
-        data=Canal.objects.all().values(
-            "id",
-            "canalmensaje__texto",
-            "tiempo",
-            "canalmensaje__usuario__correo",
-            "canalusuario__usuario__rol",
-            "canalusuario__usuario__correo"
-            
 
-        ).order_by("tiempo")
-
-        print("CONSULTAA",data)
-
-        return JsonResponse(
-            {'data':"hola",
-            'mensajes':list(data)}, 
-            safe=False)
 
