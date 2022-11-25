@@ -9,7 +9,8 @@ class Migration(migrations.Migration):
     dependencies = [
         ('empresa', '0002_cargo_estado_personaladministrativo_publicidad'),
     ]
-
+    
+    '''
     operations = [
         migrations.CreateModel(
             name='cliente',
@@ -129,7 +130,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='empresa.tipoequipamiento'),
         ),
         migrations.CreateModel(
-            name='detallePerilOp',
+            name='detallePerfilOp',
             fields=[
                 ('idDetallePerfil', models.AutoField(primary_key=True, serialize=False)),
                 ('estado', models.CharField(max_length=20)),
@@ -163,4 +164,6 @@ class Migration(migrations.Migration):
                 ('municion', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='empresa.municion')),
             ],
         ),
+        
     ]
+    '''

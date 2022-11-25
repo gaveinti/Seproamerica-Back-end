@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
     'empresa.apps.EmpresaConfig',
-    'chat'
+    'chat',
 ]
 
 MIDDLEWARE = [
@@ -95,10 +95,11 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seproamerica2022$seproamericadb',
-        'USER': 'seproamerica2022',
-        'PASSWORD': 'Admin2022',
-        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
+        'NAME': 'seproamerica11',
+        'USER': 'root',
+        'PASSWORD': 'centro234',
+        'HOST': 'localhost',
+        'PORT': '3306'
         
 
         

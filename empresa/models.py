@@ -82,9 +82,11 @@ class personalOperativo(models.Model):
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(max_length=70, unique=True)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
-    agregadoPor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    #agregadoPor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
+    fotoOp = models.ImageField(upload_to='uploads/')
+
 
 class tipoServicio(models.Model):
     idTipo = models.AutoField(primary_key=True)
@@ -101,16 +103,9 @@ class metodoPago(models.Model):
     idTipo = models.AutoField(primary_key=True)
     metodo = models.CharField(max_length=20)
 
-class tipoEquipamiento(models.Model):
-    idTipoEq = models.AutoField(primary_key=True)
-    descripcion = models.CharField(max_length=20)
-    estado = models.CharField(max_length=20)
-
 class equipamiento(models.Model):
     idEquipo = models.AutoField(primary_key=True)
-    fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
-    fechaCeseOperaciones = models.DateField()
-    tipo = models.ForeignKey(tipoEquipamiento, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=20)
     sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
 '''
 class detalleServicio(models.Model):
@@ -123,6 +118,8 @@ class mobil(models.Model):
     idEquipamiento = models.ForeignKey(equipamiento, on_delete=models.CASCADE)
     marca = models.CharField(max_length=20)
     color = models.CharField(max_length=20)
+    #fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
+    #fechaCeseOperaciones = models.DateField(auto_now=False)
 
 class vehiculo(models.Model):
     placa = models.CharField(max_length=10,primary_key=True)
@@ -131,6 +128,8 @@ class vehiculo(models.Model):
     modelo = models.CharField(max_length=20)
     color = models.CharField(max_length=20)
     anio = models.IntegerField()
+    #fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
+    #fechaCeseOperaciones = models.DateField(auto_now=False)
 
 class candado(models.Model):
     numSerie = models.CharField(max_length=20,primary_key=True)
@@ -139,22 +138,26 @@ class candado(models.Model):
     modelo = models.CharField(max_length=20)
     color = models.CharField(max_length=20)
     anio = models.IntegerField()
-
+    #fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
+    #fechaCeseOperaciones = models.DateField(auto_now=False)
+'''
 class municion(models.Model):
     idMunicion = models.AutoField(primary_key=True)
     marca = models.CharField(max_length=20)
     cantidad = models.IntegerField()
     calibre = models.FloatField(default=0)
-
+'''
 
 class armamento(models.Model):
     numSerie = models.CharField(max_length=20,primary_key=True)
     idEquipamiento = models.ForeignKey(equipamiento, on_delete=models.CASCADE)
     marca = models.CharField(max_length=20)
     clase = models.CharField(max_length=20)
-    municion = models.ForeignKey(municion, on_delete=models.CASCADE)
+    #municion = models.ForeignKey(municion, on_delete=models.CASCADE)
+    #fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
+    #fechaCeseOperaciones = models.DateField(auto_now=False)
 
-class detallePerilOp(models.Model):
+class detallePerfilOp(models.Model):
     idDetallePerfil = models.AutoField(primary_key=True)
     cargo = models.ForeignKey(cargo, on_delete=models.CASCADE)
     idPersonalOp = models.ForeignKey(personalOperativo, on_delete=models.CASCADE)
