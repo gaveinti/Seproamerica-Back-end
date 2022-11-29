@@ -1,7 +1,5 @@
 from django.db import models
-from django.conf import settings
 
-from django.apps import apps
 import uuid
 
 from django.db.models import Count
@@ -30,13 +28,6 @@ class ModelBase(models.Model):
     class Meta:
         abstract = True
 
-
-
-class Mensaje(models.Model):
-    canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
-    
-    
 
 
 

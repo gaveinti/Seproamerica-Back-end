@@ -1,9 +1,8 @@
 import json
-from .serializers import MensajeSerializer
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import CanalMensaje,Canal, CanalUsuario,Mensaje
+from .models import CanalMensaje,Canal, CanalUsuario
 from django.http import HttpResponse,Http404,JsonResponse
 
 
@@ -117,7 +116,7 @@ def obtener_canales_usuario_actual(request,usuario_actual):
     return JsonResponse(canales_con_todos_los_mensajes_por_usuario,safe=False)
 
 
-
+'''
 
 @api_view(['GET', 'POST'])
 @csrf_exempt
@@ -131,7 +130,7 @@ def obtener_mensajes(request):
         return JsonResponse(
             {'data':"hola",
             'mensajes':mensajes_serializer.data}, 
-            safe=False)
+            safe=False)'''
 
 
 
