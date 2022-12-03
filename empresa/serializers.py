@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
-from empresa.models import *
+from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo
  
 class UsuarioSerializer(serializers.ModelSerializer):
  

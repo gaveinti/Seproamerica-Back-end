@@ -155,7 +155,7 @@ def personalApi(request,id=0):
 def obtenerVehiculo(request):
     if request.method == 'GET':
         _vehiculos = list(vehiculo.objects.values())
-        serializer = vehiculosSerializer(_vehiculos, many=True)
+        serializer = vehiculosSerializer(_vehiculos, many=True) 
         return JsonResponse(serializer.data, safe=False)
 
 #inventario candado
