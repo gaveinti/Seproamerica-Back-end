@@ -11,8 +11,9 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario,personalOperativo, detallePerfilOp
-from empresa.serializers import UsuarioSerializer, PersonalOperativoSerializer
+from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento
+from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer
+
 import json
 
 # Create your views here.
@@ -148,3 +149,38 @@ def personalApi(request,id=0):
             datos = {'message': "Company not found..."}
         return JsonResponse("Deleted Succeffully!!", safe=False)
 
+#inventario Vehiculo
+@api_view(['GET'])
+@csrf_exempt
+def obtenerVehiculo(request):
+    if request.method == 'GET':
+        _vehiculos = list(vehiculo.objects.values())
+        serializer = vehiculosSerializer(_vehiculos, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+#inventario candado
+@api_view(['GET'])
+@csrf_exempt
+def obtenerCandado(request):
+    if request.method == 'GET':
+        _candados = list(candado.objects.values())
+        serializer = candadosSerializer(_candados, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+#inventario armamento
+@api_view(['GET'])
+@csrf_exempt
+def obtenerArmamento(request):
+    if request.method == 'GET':
+        _armamentos = list(armamento.objects.values())
+        serializer = armamentosSerializer(_armamentos, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+#inventario mobil
+@api_view(['GET'])
+@csrf_exempt
+def obtenerMobil(request):
+    if request.method == 'GET':
+        _mobil = list(mobil.objects.values())
+        serializer = MobilSerializer(_mobil, many=True)
+        return JsonResponse(serializer.data, safe=False)

@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
-from empresa.models import personalOperativo
+from empresa.models import *
  
 class UsuarioSerializer(serializers.ModelSerializer):
  
@@ -35,7 +35,37 @@ class PersonalOperativoSerializer (serializers.ModelSerializer):
                 #'sucursal',
                 #'estado')
 
-'''
+#Para el inventario
+class vehiculosSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = vehiculo
+        fields = (
+                'placa',
+                'marca',
+                'modelo',
+                'color',
+                'anio')
+
+class candadosSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = candado
+        fields = (
+                'numSerie',
+                'marca',
+                'modelo',
+                'color',
+                'anio')
+
+class armamentosSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = armamento
+        fields = (
+                'numSerie',
+                'marca',
+                'clase')
+
+
+
 class MobilSerializer(serializers.ModelSerializer):
     class Meta:
         model = mobil
@@ -43,5 +73,5 @@ class MobilSerializer(serializers.ModelSerializer):
                 'idEquipamiento',
                 'marca',
                 'color')      
-'''
+
 
