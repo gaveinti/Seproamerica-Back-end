@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic.base import TemplateView
+
 
 #from django.conf.urls import url, include
 
@@ -24,4 +26,5 @@ urlpatterns = [
     path('api/auth/', include('rest_framework.urls')),
     re_path(r'^', include('empresa.urls')),
     re_path(r'^', include("chat.urls")),
+
 ]
