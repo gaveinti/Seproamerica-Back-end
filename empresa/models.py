@@ -12,6 +12,9 @@ class rol(models.Model):
     tipo = models.CharField(max_length=30)
     descripcion = models.CharField(max_length=150)
 
+    def __str__(self):
+        return str(self.tipo)
+
 class usuario(models.Model):
     sexo_CHOICES=(("M","masculino"),("F","femenino"))
     cedula = models.CharField(max_length=10, primary_key=True)
@@ -25,6 +28,9 @@ class usuario(models.Model):
     contrasenia = models.CharField(max_length=15)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
     rol = models.ForeignKey(rol, on_delete=models.CASCADE)
+    
+    def __str__(self):
+         return self.nombres+" "+ self.apellidos
 
 class estado(models.Model):
     idEstado = models.AutoField(primary_key=True)
@@ -120,6 +126,8 @@ class mobil(models.Model):
     color = models.CharField(max_length=20)
     #fechaIngreso = models.DateField(auto_now=False, auto_now_add=True)
     #fechaCeseOperaciones = models.DateField(auto_now=False)
+    usuarioApp = models.CharField(max_length=25)
+    contrasenia = models.CharField(max_length=15)
 
 class vehiculo(models.Model):
     placa = models.CharField(max_length=10,primary_key=True)

@@ -68,6 +68,7 @@ def usuarioInicioSesion(request, correoU):
     except usuario.DoesNotExist:
         return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
 
+
 @api_view(['GET','POST'])
 @csrf_exempt
 def crearPersonal(request):
@@ -184,3 +185,47 @@ def obtenerMobil(request):
         _mobil = list(mobil.objects.values())
         serializer = MobilSerializer(_mobil, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+def mobilRegistro(request):
+    #registrar un nuevo usuario
+
+    if request.method == 'GET':
+        mobils = mobil.objects.all()
+        
+        numeroCell = request.GET.get('numeroCell', None)
+        if numeroCell is not None:
+            mobils = mobils.filter(numeroCell_icontains=numeroCell)
+        mobils_serializer = MobilSerializer(mobils, many=True)
+        return JsonResponse(mobils_serializer.data, safe=False)
+
+
+        
+#Función para obtener datos de un usuario para validacion en inicio sesion
+@api_view(['GET', 'PUT'])
+@csrf_exempt
+def mobilInicioSesion(request, UsuarioApp):
+
+    try:
+        usuarioAppMobil = mobil.objects.get(usuarioApp=UsuarioApp)
+
+        #mandar datos para validación
+        if request.method == 'GET':
+            usuarioAppMobil_serializer = MobilSerializer(usuarioAppMobil) #El del final es el modelo
+            request.session["USER_LOGGED"] = usuarioAppMobil_serializer.data
+            return JsonResponse(usuarioAppMobil_serializer.data)
+            
+        elif request.method == 'PUT':
+            usuarioAppMobil_data = JSONParser().parse(request)
+            usuarioAppMobil_serializer = MobilSerializer(usuarioAppMobil, data=usuarioAppMobil_data)
+            if usuarioAppMobil_serializer.is_valid():
+                usuarioAppMobil_serializer.save()
+
+
+                return JsonResponse(usuarioAppMobil_serializer.data)
+                
+            return JsonResponse(usuarioAppMobil_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except usuario.DoesNotExist:
+        return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
+

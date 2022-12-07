@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +45,12 @@ INSTALLED_APPS = [
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
     'empresa.apps.EmpresaConfig',
+<<<<<<< HEAD
     'chat',
+=======
+    'channels',
+    'chat'
+>>>>>>> 6958567d2526ec6af44095bcf927eb3a4da9e279
 ]
 
 MIDDLEWARE = [
@@ -60,13 +66,19 @@ MIDDLEWARE = [
 ]
 
 # Next, set CORS_ORIGIN_ALLOW_ALL and add the host to CORS_ORIGIN_WHITELIST:
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:4200',
     'http://121.0.0.1:8000',
+    'ws://localhost:8000',
+
+    'wss://seproamerica2022.pythonanywhere.com',
     'https://seproamerica2022.pythonanywhere.com'
 
 )
+
+
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -86,23 +98,49 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'mysite.asgi.application'
 WSGI_APPLICATION = 'mysite.wsgi.application'
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
+
+'''CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}'''
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         'NAME': 'seproamerica11',
         'USER': 'root',
         'PASSWORD': 'centro234',
         'HOST': 'localhost',
         'PORT': '3306'
         
+=======
+        'NAME': 'seproamerica2022$seproamericadb',
+        'USER': 'seproamerica2022',
+        'PASSWORD': 'Admin2022',
+        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
+        #'PORT': '3306',
+>>>>>>> 6958567d2526ec6af44095bcf927eb3a4da9e279
 
-        
     }
 }
 
@@ -159,8 +197,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+#STATICFILES_DIRS = [
+#    BASE_DIR + "/static"
+#]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
