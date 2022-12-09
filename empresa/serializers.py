@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
-from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo 
+from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo, pedido
 
 class UsuarioSerializer(serializers.ModelSerializer):
  
@@ -95,3 +95,21 @@ class MobilSerializer(serializers.ModelSerializer):
                   'contrasenia',
                   )
 
+class PedidoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = pedido
+        fields = ('idPedido',
+                  'nombre_Servicio'
+                  'fecha_Solicitud'
+                  'fecha_Inicio'
+                  'fecha_Finalizacion'
+                  'hora_Inicio'
+                  'hora_Finalizacion'
+                  'cantidad_Empleados_Asignados'
+                  'costo'
+                  'latitud_Origen'
+                  'longitud_Origen'
+                  'latitud_Destino'
+                  'longitud_Destino'
+                )

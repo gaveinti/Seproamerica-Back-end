@@ -126,7 +126,7 @@ DATABASES = {
         'USER': 'seproamerica2022',
         'PASSWORD': 'Admin2022',
         'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
-        #'PORT': '3306',   
+        #'PORT': '3306',
 
 
     }
