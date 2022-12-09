@@ -75,6 +75,7 @@ class tarjeta(models.Model):
     tipo = models.CharField(max_length=10,choices=tipoTarjeta_CHOICES)
     propietario = models.ForeignKey(cliente, on_delete=models.CASCADE)
 
+    #agregadoPor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
 
 class personalOperativo(models.Model):
     sexo_CHOICES=(("M","masculino"),("F","femenino"))
@@ -88,7 +89,6 @@ class personalOperativo(models.Model):
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(max_length=70, unique=True)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
-    #agregadoPor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
     fotoOp = models.ImageField(upload_to='uploads/')

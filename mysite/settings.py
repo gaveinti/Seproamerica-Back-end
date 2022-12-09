@@ -45,12 +45,8 @@ INSTALLED_APPS = [
     'clienteWA.apps.ClientewaConfig',
     'corsheaders',
     'empresa.apps.EmpresaConfig',
-<<<<<<< HEAD
-    'chat',
-=======
     'channels',
     'chat'
->>>>>>> 6958567d2526ec6af44095bcf927eb3a4da9e279
 ]
 
 MIDDLEWARE = [
@@ -126,20 +122,13 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-<<<<<<< HEAD
         'NAME': 'seproamerica11',
         'USER': 'root',
         'PASSWORD': 'centro234',
         'HOST': 'localhost',
         'PORT': '3306'
         
-=======
-        'NAME': 'seproamerica2022$seproamericadb',
-        'USER': 'seproamerica2022',
-        'PASSWORD': 'Admin2022',
-        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
-        #'PORT': '3306',
->>>>>>> 6958567d2526ec6af44095bcf927eb3a4da9e279
+
 
     }
 }

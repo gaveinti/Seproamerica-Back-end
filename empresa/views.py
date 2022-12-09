@@ -111,10 +111,18 @@ def agregarPersonal(request):
 @csrf_exempt
 def personalApi(request,id=0):
     '''
-    if request.method=='GET':
-        employees = Employees.objects.all()
-        employees_serializer = EmployeeSerializer(employees, many=True)
-        return JsonResponse(employees_serializer.data, safe=False)
+    #registrar un nuevo usuario
+    if request.method == 'POST':
+        
+    elif request.method == 'GET':
+        usuarios = usuario.objects.all()
+        
+        nombre = request.GET.get('nombres', None)
+        if nombre is not None:
+            usuarios = usuarios.filter(nombre_icontains=nombre)
+        usuarios_serializer = UsuarioSerializer(usuarios, many=True)
+        return JsonResponse(usuarios_serializer.data, safe=False)
+
     '''
     if request.method=='GET':
         _personalOp = list(personalOperativo.objects.values())
@@ -122,14 +130,13 @@ def personalApi(request,id=0):
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method=='POST':
-        
-        jd = json.loads(request.body)
-        # print(jd)
-        serializer = PersonalOperativoSerializer(data=personalOp_data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse("Added Successfully!!" , safe=False)
-        return JsonResponse("Failed to Add.",safe=False)
+        personalARegistrar_Data = JSONParser().parse(request)
+        personalOpARegistrar_Serializer = PersonalOperativoSerializer(data = personalARegistrar_Data)
+        if personalOpARegistrar_Serializer.is_valid():
+            personalOpARegistrar_Serializer.save()
+            return JsonResponse(personalOpARegistrar_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(personalOpARegistrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
     
     elif request.method=='PUT':

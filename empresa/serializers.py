@@ -77,9 +77,9 @@ class PersonalOperativoSerializer(serializers.ModelSerializer):
                   'telefono',
                   'correo',
                   'fechaRegistro',
-                  'agregadoPor',
-                  'sucursal',
-                  'estado',
+                  #'agregadoPor',
+                  #'sucursal',
+                  #'estado',
                   #'rol'
                   )
 
