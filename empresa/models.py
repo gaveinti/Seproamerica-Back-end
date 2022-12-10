@@ -27,6 +27,7 @@ class usuario(models.Model):
     correo = models.EmailField(max_length=70, unique=True)
     contrasenia = models.CharField(max_length=15)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
+    tokenMovil=models.CharField(max_length=200)
     rol = models.ForeignKey(rol, on_delete=models.CASCADE)
     
     def __str__(self):
