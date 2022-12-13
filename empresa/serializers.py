@@ -1,6 +1,6 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
-from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo, pedido
+from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo, pedido, cliente
 
 class UsuarioSerializer(serializers.ModelSerializer):
  
@@ -112,4 +112,12 @@ class PedidoSerializer(serializers.ModelSerializer):
                   'longitud_Origen'
                   'latitud_Destino'
                   'longitud_Destino'
+                )
+
+class ClienteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = cliente
+        fields = ('idCliente',
+                  'cedula'
                 )
