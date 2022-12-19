@@ -11,10 +11,25 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento
-from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer
+from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio
+from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer
 
 import json
+
+#API VIEW para obtener los servicios creados por los administradores
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def obtenerServicio(request):
+    if request.method == 'GET':
+        servicios = servicio.objects.all()
+
+        nombre_Servicio = request.GET.get('nombreServicio', None)
+        if nombre_Servicio is not None:
+            servicios = servicios.filter(nombre_Servicio_icontains=nombre_Servicio)
+
+        servicios_serializer = ServicioSerializer(servicios, many=True)
+        return JsonResponse(servicios_serializer.data, safe=False)
+
 
 # Create your views here.
 @api_view(['GET', 'POST'])

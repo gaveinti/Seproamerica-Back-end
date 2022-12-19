@@ -117,6 +117,7 @@ class servicio(models.Model):
     tipo_Servicio = models.ForeignKey(tipoServicio, on_delete=models.CASCADE)
     administrador_Creador = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     incluir_Vehiculo = models.BooleanField()
+    icono = models.URLField()
 
 
 class pedido(models.Model):
