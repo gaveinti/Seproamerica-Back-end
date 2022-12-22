@@ -27,6 +27,7 @@ class usuario(models.Model):
     correo = models.EmailField(max_length=70, unique=True)
     contrasenia = models.CharField(max_length=15)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
+    #tokenMovil=models.CharField(max_length=200)
     rol = models.ForeignKey(rol, on_delete=models.CASCADE)
     
     def __str__(self):
@@ -35,6 +36,11 @@ class usuario(models.Model):
 class estado(models.Model):
     idEstado = models.AutoField(primary_key=True)
     estado = models.CharField(max_length=30)
+
+class estadoPedido(models.Model):
+    estadoPe_CHOICES = (("En Espera","En Espera"),("En Curso","En Curso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
+    idEstadoP = models.AutoField(primary_key=True)
+    estado = models.CharField(max_length=20,choices=estadoPe_CHOICES)
 
 class cargo(models.Model):
     tipoCargo_CHOICES=(("Ad","administrativo"),("Op","operativo"))
@@ -68,6 +74,10 @@ class cliente(models.Model):
     idCliente = models.AutoField(primary_key=True)
     cedula = models.ForeignKey(usuario, on_delete=models.CASCADE)
 
+class metodoPago(models.Model):
+    idTipo = models.AutoField(primary_key=True)
+    metodo = models.CharField(max_length=20)
+
 class tarjeta(models.Model):
     tipoTarjeta_CHOICES = (("debito","debito"),("credito","credito"))
     numTarjeta = models.CharField(max_length=16)
@@ -96,28 +106,63 @@ class personalOperativo(models.Model):
 
 class tipoServicio(models.Model):
     idTipo = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
     tarifa = models.FloatField(default=0)
 
+class servicio(models.Model):
+    idServicio = models.AutoField(primary_key=True)
+    nombreServicio = models.CharField(max_length=50)
+    costo = models.FloatField()
+    detalles = models.CharField(max_length=100)
+    fecha_Creacion = models.DateTimeField()
+    tipo_Servicio = models.ForeignKey(tipoServicio, on_delete=models.CASCADE)
+    administrador_Creador = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    incluir_Vehiculo = models.BooleanField()
 
-class estadoPedido(models.Model):
-    estadoPe_CHOICES = (("En Espera","En Espera"),("En Curso","En Curso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
-    idEstadoP = models.AutoField(primary_key=True)
-    estado = models.CharField(max_length=20,choices=estadoPe_CHOICES)
 
-class metodoPago(models.Model):
-    idTipo = models.AutoField(primary_key=True)
-    metodo = models.CharField(max_length=20)
+class pedido(models.Model):
+    idPedido = models.AutoField(primary_key=True)
+    nombre_Servicio = models.CharField(max_length=50)
+    costo = models.FloatField()
+    fecha_Solicitud = models.DateTimeField()
+    fecha_Inicio = models.DateField()
+    fecha_Finalizacion = models.DateField()
+    hora_Inicio = models.TimeField()
+    hora_Finalizacion = models.TimeField()
+    latitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
+    longitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
+    latitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
+    longitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
+    cantidad_Empleados_Asignados = models.IntegerField()
+    cantidad_vehiculos = models.IntegerField()
+    detalle = models.CharField(max_length=300)
+    estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
+    metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
+    idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
+    administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    cliente_solicitante = models.ForeignKey(cliente, on_delete=models.CASCADE)
+    
+
+class detallePersonalAsignado(models.Model):
+    idPersonalAsignado = models.AutoField(primary_key=True)
+    encargado_Servicio = models.BooleanField()
+    cargo = models.CharField(max_length=30)
+    idPedido = models.ForeignKey(pedido, on_delete=models.CASCADE)
+    idEmpleado = models.ForeignKey(personalOperativo, on_delete=models.CASCADE)
+
 
 class equipamiento(models.Model):
     idEquipo = models.AutoField(primary_key=True)
     tipo = models.CharField(max_length=20)
     sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
-'''
+
+class detallePedido(models.Model):
+    idPedido = models.ForeignKey(pedido, on_delete=models.CASCADE)
+    idequipamiento = models.ForeignKey(equipamiento, on_delete=models.CASCADE)
+
 class detalleServicio(models.Model):
-    idServicio =  models.ForeignKey(equipamiento, on_delete=models.CASCADE)
+    idServicio =  models.ForeignKey(servicio, on_delete=models.CASCADE)
     idEquipamiento = models.ForeignKey(equipamiento, on_delete=models.CASCADE)
-'''
+
 
 class mobil(models.Model):
     numeroCell = models.CharField(max_length=10,primary_key=True)
