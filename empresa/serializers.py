@@ -19,6 +19,17 @@ class UsuarioSerializer(serializers.ModelSerializer):
                   'rol')
 
 #Para el inventario
+class vehiculosMostrarSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = vehiculo
+        fields = (
+                'placa',
+                'marca',
+                'modelo',
+                'color',
+                'anio',)
+
+#para el registro hasta poder arreglar
 class vehiculosSerializer (serializers.ModelSerializer):
     class Meta:
         model = vehiculo
@@ -27,7 +38,18 @@ class vehiculosSerializer (serializers.ModelSerializer):
                 'marca',
                 'modelo',
                 'color',
-                'anio')
+                'anio',
+                'idEquipamiento')
+
+class candadosMostrarSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = candado
+        fields = (
+                'numSerie',
+                'marca',
+                'modelo',
+                'color',
+                'anio',)
 
 class candadosSerializer (serializers.ModelSerializer):
     class Meta:
@@ -37,7 +59,16 @@ class candadosSerializer (serializers.ModelSerializer):
                 'marca',
                 'modelo',
                 'color',
-                'anio')
+                'anio',
+                'idEquipamiento')
+
+class armamentosMostrarSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = armamento
+        fields = (
+                'numSerie',
+                'marca',
+                'clase')
 
 class armamentosSerializer (serializers.ModelSerializer):
     class Meta:
@@ -45,7 +76,8 @@ class armamentosSerializer (serializers.ModelSerializer):
         fields = (
                 'numSerie',
                 'marca',
-                'clase')
+                'clase',
+                'idEquipamiento')
 
 class PersonalAdministrativoSerializer(serializers.ModelSerializer):
  
