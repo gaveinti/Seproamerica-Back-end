@@ -10,6 +10,7 @@ urlpatterns = [
 
     re_path(r'api/visualizarPersonal/', views.personalApi),
     re_path(r'api/visualizarPersonal/[0-9]+',views.personalApi),
+    re_path(r'api/visualizarVehiculos/^[a-zA-Z0-9-]+$',views.vehiculoEspecifico),
     re_path(r'api/visualizarVehiculos/',views.obtenerVehiculo),
     re_path(r'api/visualizarCandados/',views.obtenerCandado),
     re_path(r'api/visualizarArmamentos/',views.obtenerArmamento),

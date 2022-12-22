@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from django.contrib import messages
 
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento
-from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer
+from empresa.serializers import *
 
 import json
 
@@ -158,31 +158,74 @@ def personalApi(request,id=0):
         return JsonResponse("Deleted Succeffully!!", safe=False)
 
 #inventario Vehiculo
-@api_view(['GET'])
+@api_view(['GET','POST','DELETE'])
 @csrf_exempt
 def obtenerVehiculo(request):
     if request.method == 'GET':
         _vehiculos = list(vehiculo.objects.values())
-        serializer = vehiculosSerializer(_vehiculos, many=True) 
+        serializer = vehiculosMostrarSerializer(_vehiculos, many=True) 
         return JsonResponse(serializer.data, safe=False)
 
+    elif request.method=='POST':
+        vehiculoARegistrar_Data = JSONParser().parse(request)
+        _vehiculos = vehiculosSerializer(data = vehiculoARegistrar_Data)
+        if _vehiculos.is_valid():
+            _vehiculos.save()
+            return JsonResponse(_vehiculos.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(_vehiculos.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PUT','DELETE'])
+@csrf_exempt
+def vehiculoEspecifico(request,placa):
+    try:
+        usuarioAppMobil = vehiculo.objects.get(placa=placa)
+        if request.method == 'DELETE':
+            _vehiculos = list(vehiculo.objectsfilter(placa=placa).values())
+            if len(_vehiculos) > 0:
+                vehiculo.objects.filter(placa=placa).delete()
+                datos = {'message': "Success"}
+            else:
+                datos = {'message': "Company not found..."}
+            return JsonResponse("Deleted Succeffully!!", safe=False)
+    except vehiculo.DoesNotExist:
+        return JsonResponse({'message' : 'El vehiculo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+
 #inventario candado
-@api_view(['GET'])
+@api_view(['GET','POST','DELETE'])
 @csrf_exempt
 def obtenerCandado(request):
     if request.method == 'GET':
         _candados = list(candado.objects.values())
-        serializer = candadosSerializer(_candados, many=True)
+        serializer = candadosMostrarSerializer(_candados, many=True)
         return JsonResponse(serializer.data, safe=False)
 
+    elif request.method=='POST':
+            candadoARegistrar_Data = JSONParser().parse(request)
+            _candados = candadosSerializer(data = candadoARegistrar_Data)
+            if _candados.is_valid():
+                _candados.save()
+                return JsonResponse(_candados.data, status=status.HTTP_201_CREATED)
+            return JsonResponse(_candados.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 #inventario armamento
-@api_view(['GET'])
+@api_view(['GET','POST'])
 @csrf_exempt
 def obtenerArmamento(request):
     if request.method == 'GET':
         _armamentos = list(armamento.objects.values())
-        serializer = armamentosSerializer(_armamentos, many=True)
+        serializer = armamentosMostrarSerializer(_armamentos, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+    elif request.method=='POST':
+            armamentoARegistrar_Data = JSONParser().parse(request)
+            _armamentos = armamentosSerializer(data = armamentoARegistrar_Data)
+            if _armamentos.is_valid():
+                _armamentos.save()
+                return JsonResponse(_armamentos.data, status=status.HTTP_201_CREATED)
+            return JsonResponse(_armamentos.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 #inventario mobil
 @api_view(['GET'])
