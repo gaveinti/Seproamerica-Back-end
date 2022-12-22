@@ -1,21 +1,21 @@
+from django.contrib.auth.models import AbstractUser
+
+#built-in signals
+from django.db.models.signals import post_save
+
+#signals
+from notificaciones.signals import notificar
+
+
+#Models
 from django.db import models
-
-import uuid
-
 from django.db.models import Count
-
 from empresa.models import usuario
 
+import uuid
 #User= settings.AUTH_USER_MODEL
 User = usuario
 # Create your models here.
-
-
-
-
-
-
-
 
 
 
@@ -55,7 +55,6 @@ class CanalMensaje(ModelBase):
 
     def __str__(self):
         return str(self.canal)
-
 
 class CanalUsuario(ModelBase):
     canal = models.ForeignKey("Canal", null=True, on_delete=models.CASCADE)
@@ -126,6 +125,7 @@ class CanalManager(models.Manager):
         return qs
 
 
+        
 class Canal(ModelBase):
     # para 1 o mas usuarios conectados
     servicio_CHOICES = (("Custodia", "Custodia Armada"), ("Transporte", "Transporte de productos"),
@@ -134,3 +134,10 @@ class Canal(ModelBase):
     id_servicio = models.CharField(max_length=30)
     usuarios = models.ManyToManyField(User, blank=True, through=CanalUsuario)
     objects = CanalManager()
+
+
+
+def notify_mensaje(sender,instance,created,**kwargs):
+    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+post_save.connect(notify_mensaje,sender=CanalMensaje)
+

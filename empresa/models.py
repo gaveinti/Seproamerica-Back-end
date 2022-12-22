@@ -103,6 +103,14 @@ class personalOperativo(models.Model):
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
     fotoOp = models.ImageField(upload_to='uploads/')
 
+class Personal_Operativo(usuario):
+    idPersonal = models.AutoField(primary_key=True)
+    numCedula = models.CharField(max_length=10, unique=True)
+    sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
+    estado = models.ForeignKey(estado, on_delete=models.CASCADE)
+    #fotoOp = models.ImageField(upload_to='uploads/')
+
+
 
 class tipoServicio(models.Model):
     idTipo = models.AutoField(primary_key=True)
@@ -138,7 +146,9 @@ class pedido(models.Model):
     estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
     metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
     idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
-    administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    #administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    personal_Encargado = models.ForeignKey(personalOperativo, on_delete=models.CASCADE)
+
     cliente_solicitante = models.ForeignKey(cliente, on_delete=models.CASCADE)
     
 
