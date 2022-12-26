@@ -100,18 +100,25 @@ class PedidoSerializer(serializers.ModelSerializer):
     class Meta:
         model = pedido
         fields = ('idPedido',
-                  'nombre_Servicio'
-                  'fecha_Solicitud'
-                  'fecha_Inicio'
-                  'fecha_Finalizacion'
-                  'hora_Inicio'
-                  'hora_Finalizacion'
-                  'cantidad_Empleados_Asignados'
-                  'costo'
-                  'latitud_Origen'
-                  'longitud_Origen'
-                  'latitud_Destino'
-                  'longitud_Destino'
+                  'nombre_Servicio',
+                  'costo',
+                  'fecha_Solicitud',
+                  'fecha_Inicio',
+                  'fecha_Finalizacion',
+                  'hora_Inicio',
+                  'hora_Finalizacion',
+                  'latitud_Origen',
+                  'longitud_Origen',
+                  'latitud_Destino',
+                  'longitud_Destino',
+                  'cantidad_Empleados_Asignados',
+                  'cantidad_vehiculos',
+                  'detalle',
+                  'estado',
+                  'metodo_Pago',
+                  'idServicio',
+                  'administrador_Encargado',
+                  'cliente_solicitante'
                 )
 
 class ClienteSerializer(serializers.ModelSerializer):

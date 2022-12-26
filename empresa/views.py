@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from django.contrib import messages
 
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio
-from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer
+from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer
 
 import json
 
@@ -30,6 +30,31 @@ def obtenerServicio(request):
         servicios_serializer = ServicioSerializer(servicios, many=True)
         return JsonResponse(servicios_serializer.data, safe=False)
 
+
+#API VIEW para enviar solicitud de servicio creado por el cliente
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def solicitarServicio(request):
+    if request.method == 'POST':
+        solicitud_De_Servicio = JSONParser().parse(request)
+        solicitud_De_Servicio_Serializer = PedidoSerializer(data = solicitud_De_Servicio)
+        if solicitud_De_Servicio_Serializer.is_valid():
+            solicitud_De_Servicio_Serializer.save()
+            return JsonResponse(solicitud_De_Servicio_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(solicitud_De_Servicio_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#API para luego de registrar usuario, tambien registrar cliente
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def clienteRegistro(request):
+    if request.method == 'POST':
+        cliente_A_Registrar_Data = JSONParser().parse(request)
+        cliente_A_Registrar_Serializer = ClienteSerializer(data=cliente_A_Registrar_Data )
+        if cliente_A_Registrar_Serializer.is_valid():
+            cliente_A_Registrar_Serializer.save()
+            return JsonResponse(cliente_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(cliente_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Create your views here.
 @api_view(['GET', 'POST'])

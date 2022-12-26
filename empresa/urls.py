@@ -6,6 +6,9 @@ urlpatterns = [
     re_path(r'^api/usuarioInicioSesion/(?P<correoU>\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.usuarioInicioSesion),
     re_path(r'^api/usuarioRegistro$', views.usuarioRegistro),
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
+    re_path(r'^api/solicitarServicio$', views.solicitarServicio),
+    re_path(r'^api/clienteRegistro$', views.clienteRegistro),
+
     
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
 
