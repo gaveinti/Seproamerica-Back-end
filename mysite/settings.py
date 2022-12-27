@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'empresa.apps.EmpresaConfig',
     'channels',
-    'chat'
+    'chat',
+    'notificaciones'
 ]
 
 MIDDLEWARE = [
@@ -145,6 +146,7 @@ desarrollo
         'PASSWORD': 'centro234',
         'HOST': 'localhost',
         'PORT': '3306'
+  
 '''
 '''
 produccion

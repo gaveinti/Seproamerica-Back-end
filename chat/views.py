@@ -21,12 +21,14 @@ from django.core import serializers
 
 @api_view(['GET', 'POST'])
 @csrf_exempt
-def verificar_y_crear_canal(request,servicio,usuario_receptor,usuario_actual):
+def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuario_actual):
 
 
     if request.method == 'POST':
         #mensaje_por_canal=JSONParser().parse(request.data)
         data_json=dict(request.data)
+        print(data_json)
+        print("=============================")
         canal_c=Canal.objects.get(id=data_json["canal"])
         usuario_canal=usuario.objects.get(correo=data_json["usuario"])
         nuevo_mensaje=CanalMensaje(
@@ -45,7 +47,7 @@ def verificar_y_crear_canal(request,servicio,usuario_receptor,usuario_actual):
         
         mi_username=usuario_actual
 
-        canal,_= Canal.objects.obtener_o_crear_canal_ms(mi_username,usuario_receptor,servicio)
+        canal,_= Canal.objects.obtener_o_crear_canal_ms(mi_username,usuario_receptor,servicio,id_servicio)
         #canal="hola"
         if canal == None:
             return JsonResponse({'mensaje':'Canal no creado','status':'Error'})
@@ -64,6 +66,7 @@ def verificar_y_crear_canal(request,servicio,usuario_receptor,usuario_actual):
         return JsonResponse({
             'canal':canal.id,
             'servicio':canal.servicio,
+            'id_servicio':canal.id_servicio,
             'receptor':usuario_receptor,
             'usuario_logeado':mi_username,
             'perfil_receptor':perfil_receptor,

@@ -27,7 +27,7 @@ class usuario(models.Model):
     correo = models.EmailField(max_length=70, unique=True)
     contrasenia = models.CharField(max_length=15)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
-    tokenMovil=models.CharField(max_length=200)
+    #tokenMovil=models.CharField(max_length=200)
     rol = models.ForeignKey(rol, on_delete=models.CASCADE)
     
     def __str__(self):
@@ -103,6 +103,14 @@ class personalOperativo(models.Model):
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
     fotoOp = models.ImageField(upload_to='uploads/')
 
+class Personal_Operativo(usuario):
+    idPersonal = models.AutoField(primary_key=True)
+    numCedula = models.CharField(max_length=10, unique=True)
+    sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
+    estado = models.ForeignKey(estado, on_delete=models.CASCADE)
+    #fotoOp = models.ImageField(upload_to='uploads/')
+
+
 
 class tipoServicio(models.Model):
     idTipo = models.AutoField(primary_key=True)
@@ -134,12 +142,14 @@ class pedido(models.Model):
     latitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
     longitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
     cantidad_Empleados_Asignados = models.IntegerField()
-    cantidad_vehiculos = models.IntegerField()
+    cantidad_vehiculos = models.IntegerField(blank=True, null=True)
     detalle = models.CharField(max_length=300)
     estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
     metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
     idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
     administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
+    personal_Encargado = models.ForeignKey(personalOperativo, on_delete=models.CASCADE, blank=True, null=True)
+
     cliente_solicitante = models.ForeignKey(cliente, on_delete=models.CASCADE)
     
 

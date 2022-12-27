@@ -26,5 +26,5 @@ urlpatterns = [
     path('api/auth/', include('rest_framework.urls')),
     re_path(r'^', include('empresa.urls')),
     re_path(r'^', include("chat.urls")),
-
+    re_path(r'^', include("notificaciones.urls")),
 ]

@@ -1,21 +1,21 @@
+from django.contrib.auth.models import AbstractUser
+
+#built-in signals
+from django.db.models.signals import post_save
+
+#signals
+from notificaciones.signals import notificar
+
+
+#Models
 from django.db import models
-
-import uuid
-
 from django.db.models import Count
-
 from empresa.models import usuario
 
+import uuid
 #User= settings.AUTH_USER_MODEL
 User = usuario
 # Create your models here.
-
-
-
-
-
-
-
 
 
 
@@ -37,6 +37,7 @@ class CanalMensaje(ModelBase):
     canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.TextField()
+    #leido = models.BooleanField() 
 
 
 
@@ -44,7 +45,7 @@ class CanalMensaje(ModelBase):
 
     def obtener_data_mensaje_usuarios(id_canal):
         qs = CanalMensaje.objects.filter(
-            canal_id=id_canal).values("canal__servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
+            canal_id=id_canal).values("canal__servicio","canal__id_servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
 
         mensajes = list(qs.order_by("tiempo"))
 
@@ -54,7 +55,6 @@ class CanalMensaje(ModelBase):
 
     def __str__(self):
         return str(self.canal)
-
 
 class CanalUsuario(ModelBase):
     canal = models.ForeignKey("Canal", null=True, on_delete=models.CASCADE)
@@ -75,8 +75,8 @@ class CanalQuerySet(models.QuerySet):
     def filtrar_por_username(self, username):
         return self.filter(canalusuario__usuario__correo=username)
 
-    def filtrar_por_servicio(self, _servicio, usuario_a, usuario_b):
-        return self.filtrar_por_username(usuario_a).filtrar_por_username(usuario_b).filter(servicio=_servicio)
+    def filtrar_por_servicio(self, _servicio,id_servicio, usuario_a, usuario_b):
+        return self.filtrar_por_username(usuario_a).filtrar_por_username(usuario_b).filter(id_servicio=id_servicio).filter(servicio=_servicio)
     
 
 
@@ -86,13 +86,13 @@ class CanalManager(models.Manager):
     def get_queryset(self, *args, **kwards):
         return CanalQuerySet(self.model, using=self._db)
 
-    def filtrar_ms_por_privado(self, username_a, username_b, servicio):
-        return self.get_queryset().solo_dos().filtrar_por_servicio(servicio, username_a, username_b)
+    def filtrar_ms_por_privado(self, username_a, username_b, servicio,id_servicio):
+        return self.get_queryset().solo_dos().filtrar_por_servicio(servicio,id_servicio, username_a, username_b)
 
 
 
-    def obtener_o_crear_canal_ms(self, username_a, username_b, servicio):
-        qs = self.filtrar_ms_por_privado(username_a, username_b, servicio)
+    def obtener_o_crear_canal_ms(self, username_a, username_b, servicio,id_servicio):
+        qs = self.filtrar_ms_por_privado(username_a, username_b, servicio,id_servicio)
         if qs.exists():
             return qs.order_by("tiempo").first(), False  # obj, Created
 
@@ -112,7 +112,7 @@ class CanalManager(models.Manager):
         if (usuario_a == None or usuario_b == None):
             return None, False
 
-        obj_canal = Canal.objects.create(servicio=servicio)
+        obj_canal = Canal.objects.create(servicio=servicio, id_servicio=id_servicio)
         canal_usuario_a = CanalUsuario(usuario=usuario_a, canal=obj_canal)
         canal_usuario_b = CanalUsuario(usuario=usuario_b, canal=obj_canal)
         CanalUsuario.objects.bulk_create([canal_usuario_a, canal_usuario_b])
@@ -125,10 +125,19 @@ class CanalManager(models.Manager):
         return qs
 
 
+        
 class Canal(ModelBase):
     # para 1 o mas usuarios conectados
     servicio_CHOICES = (("Custodia", "Custodia Armada"), ("Transporte", "Transporte de productos"),
                         ("Chofer", "Chofer seguro"), ("Guardia", "Guardia de seguridad"))
     servicio = models.CharField(max_length=23, choices=servicio_CHOICES)
+    id_servicio = models.CharField(max_length=30)
     usuarios = models.ManyToManyField(User, blank=True, through=CanalUsuario)
     objects = CanalManager()
+
+
+
+def notify_mensaje(sender,instance,created,**kwargs):
+    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+post_save.connect(notify_mensaje,sender=CanalMensaje)
+
