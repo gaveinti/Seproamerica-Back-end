@@ -13,7 +13,7 @@ from django.contrib import messages
 
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido
 from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento
+from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente
 from empresa.serializers import *
 
 import json
@@ -85,6 +85,20 @@ def clienteRegistro(request):
             cliente_A_Registrar_Serializer.save()
             return JsonResponse(cliente_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(cliente_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#API para obtener un cliente de la tabla de clientes a partir de la cédula
+@api_view(['GET'])
+def obtenerCliente(request, cedula_Cliente):
+
+    try: 
+        cliente_A_Encontrar = cliente.objects.get(cedula=cedula_Cliente)
+
+        if request.method == 'GET':
+            cliente_A_Encontrar_serializer = ClienteSerializer(cliente_A_Encontrar)
+            return JsonResponse(cliente_A_Encontrar_serializer.data)
+
+    except cliente.DoesNotExist:
+        return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
 
 # Create your views here.
 @api_view(['GET', 'POST'])

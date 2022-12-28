@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
     re_path(r'^api/clienteRegistro$', views.clienteRegistro),
+    re_path(r'^api/obtenerCliente/(?P<cedula_Cliente>[0-9]+)/$', views.obtenerCliente),
     re_path(r'^api/actualizarServicio/(?P<pk>[0-9]+)/$', views.actualizarServicio),
 
     
