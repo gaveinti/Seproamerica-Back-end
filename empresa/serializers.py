@@ -1,6 +1,7 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
 from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo, pedido, cliente, servicio
+from empresa.models import sucursal
 
 class UsuarioSerializer(serializers.ModelSerializer):
  
@@ -91,7 +92,6 @@ class PersonalAdministrativoSerializer(serializers.ModelSerializer):
                   'cargo',
                   'estado',
                   'fechaModificacion',
-                  #'rol' 
                   )
 
 class PersonalOperativoSerializer(serializers.ModelSerializer):
@@ -175,4 +175,12 @@ class ServicioSerializer(serializers.ModelSerializer):
                   'administrador_Creador',
                   'incluir_Vehiculo',
                   'icono'
+                )
+
+class SucursalSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = sucursal
+        fields = ('idSucursal',
+                  'direccion'
                 )

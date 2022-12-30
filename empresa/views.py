@@ -11,12 +11,46 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido
-from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer
+from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
+from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente
 from empresa.serializers import *
 
 import json
+
+#--------------------------------------------- API's para administrador -------------------------------------------------
+
+#API para luego de registrar usuario, tambien registrar cliente
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def adminRegistro(request):
+    if request.method == 'POST':
+        admin_A_Registrar_Data = JSONParser().parse(request)
+        admin_A_Registrar_Serializer = PersonalAdministrativoSerializer(data=admin_A_Registrar_Data )
+        if admin_A_Registrar_Serializer.is_valid():
+            admin_A_Registrar_Serializer.save()
+            return JsonResponse(admin_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(admin_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#API para obtener un cliente de la tabla de clientes a partir de la cédula
+@api_view(['GET'])
+def obtenerAdministrador(request, cedula_Admin):
+
+    try: 
+        admin_A_Encontrar = personalAdministrativo.objects.get(cedula=cedula_Admin)
+
+        if request.method == 'GET':
+            admin_A_Encontrar_serializer = PersonalAdministrativoSerializer(admin_A_Encontrar)
+            return JsonResponse(admin_A_Encontrar_serializer.data)
+
+    except cliente.DoesNotExist:
+        return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+# ---------------------------------------------------------- Fin --------------------------------------------------
+
 
 #API para actualizar la información de un servicio
 @api_view(['PUT'])
@@ -363,3 +397,16 @@ def mobilInicioSesion(request, UsuarioApp):
     except usuario.DoesNotExist:
         return JsonResponse({'message' : 'El usuario no existe'}, status=status.HTTP_404_NOT_FOUND)
 
+
+#Api para obtener Sucursales y presentarlas en el registro de un administrador
+@api_view(['GET', 'POST', 'DELETE'])
+def obtenerSucursal(request):
+    if request.method == 'GET':
+        sucursales = sucursal.objects.all()
+
+        direccion = request.GET.get('direccion', None)
+        if direccion is not None:
+            sucursales = sucursales.filter(direccion_icontains=direccion)
+
+        sucursales_serializer = SucursalSerializer(sucursales, many=True)
+        return JsonResponse(sucursales_serializer.data, safe=False)

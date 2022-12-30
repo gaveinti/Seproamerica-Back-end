@@ -13,6 +13,9 @@ urlpatterns = [
 
     
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
+    re_path(r'^api/personalAdminRegistro$', views.adminRegistro),
+    re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador),
+
 
     re_path(r'api/visualizarPersonal/', views.personalApi),
     re_path(r'api/visualizarPersonal/[0-9]+',views.personalApi),
@@ -21,6 +24,8 @@ urlpatterns = [
     re_path(r'api/visualizarCandados/',views.obtenerCandado),
     re_path(r'api/visualizarArmamentos/',views.obtenerArmamento),
     re_path(r'api/visualizarMobil/',views.obtenerMobil),
+    re_path(r'api/visualizarSucursales/',views.obtenerSucursal),
+
  
 
 
