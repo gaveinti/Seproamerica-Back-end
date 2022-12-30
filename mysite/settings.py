@@ -125,7 +125,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seproamericadb',
         'USER': 'root',
-        'PASSWORD': 'emelec',
+        'PASSWORD': 'Admin',
         'HOST': 'localhost',
         'PORT': '3306',
 
@@ -135,7 +135,7 @@ DATABASES = {
 
 '''
 desarrollo
-'NAME': 'seproamericadb',
+        'NAME': 'seproamericadb',
         'USER': 'root',
         'PASSWORD': 'Admin',
         'HOST': 'localhost',
