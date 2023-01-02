@@ -26,25 +26,31 @@ from empresa.models import usuario
     leido = models.BooleanField()'''
     
 class NotificacionQueryset(models.QuerySet):
-    def leido(self, include_deleted=True):
+    def leido(self):
         '''
         Retornar notificaciones leidas en el actual queryset
         '''
-        if include_deleted:
-            return self.filter(read=True)
+        return self.filter(read=True)
     
-    def no_leido(self, include_deleted=False):
+    def no_leido(self):
         '''
         Retornar notificaciones que no han sido leidas en el actual queryset
         '''
-        if include_deleted==True:
-            return self.filter(read=False)
-
-    def marcar_todo_como_leido(self,destiny):
+        return self.filter(read=False)
+    def marcar_como_leido(self,id_notificacion):
+        '''
+        Marcar notificacion individual leida
+        '''
+        qs=self.filter(id=id_notificacion)
+        if(qs):
+            return qs.update(read=True)
+        else:
+            return qs
+    def marcar_todo_como_leido(self,destiny=None):
         '''
         Marcar todas las notificaciones como leidas en el actual queryset
         '''
-        qs=self.read(False)
+        qs=self.filter(read=False)
         if destiny:
             qs=qs.filter(destiny=destiny)
         return qs.update(read=True)
@@ -59,9 +65,16 @@ class AbstractNotificacion(models.Model):
     class Levels(models.TextChoices):
         success='Success','success'
         info='Info','info'
-        wrong='Wrong','wrong'
+        wrong='Wrong','wrong',
+        cualquiera='Cualquiera','cualquiera',
+        servicio_solicitado="Servicio solicitado","servicio_solicitado",
+        servicio_pagado="Servicio pagado","servicio_pagado",
+        servicio_cancelado="Servicio cancelado","servicio_cancelado"
 
-    level=models.CharField(choices=Levels.choices,max_length=20,default=Levels.info)
+
+    id=models.AutoField(primary_key=True)
+
+    level=models.CharField(choices=Levels.choices,max_length=20,default=Levels.cualquiera)
 
     destiny=models.ForeignKey(usuario,on_delete=models.CASCADE,related_name='notificaciones',blank=True,null=True)
 

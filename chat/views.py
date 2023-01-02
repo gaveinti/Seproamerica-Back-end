@@ -5,6 +5,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import CanalMensaje,Canal, CanalUsuario
 from django.http import HttpResponse,Http404,JsonResponse
 
+#built-in signals
+from django.db.models.signals import post_save
+
+#signals
+from notificaciones.signals import notificar
+
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -36,8 +42,34 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
             usuario=usuario_canal,
             texto=data_json["texto"]
         )
-        nuevo_mensaje.save()
+        def notificar(**kwargs):
+            Canal.objects.notify_mensaje(usuario_actual,usuario_receptor,"Mensaje Nuevo")
         
+        #Canal.objects.notificar()
+        
+        #Canal.objects.notify_mensaje(emisor=usuario_receptor,receptor=usuario_actual,texto="Nuevo Mensaje")
+        
+        nuevo_mensaje.save()
+        post_save.connect(notificar(),sender=CanalMensaje)
+
+        #CanalMensaje.notificar_nuevo_mensaje(usuario_actual,usuario_receptor,text="Nuevo Mensaje")
+        #notificar.send(sender=usuario_actual,destiny=usuario_receptor,verbo="Nuevo Mensaje",level='success')
+
+
+        #Envio de notificacion cuando se agrega un mensaje
+        '''def notify_mensaje(sender,instance,created,**kwargs):
+            notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+        post_save.connect(notify_mensaje,sender=CanalMensaje)'''
+        '''
+        def notify_mensaje(sender,instance,created,**kwargs):
+            receptor=usuario.objects.filter(correo=usuario_receptor)
+            print(receptor)
+            notificar.send(instance.usuario,destiny=receptor.first(),verbo=instance.texto,level='success')
+        post_save.connect(notify_mensaje,sender=CanalMensaje)
+
+        '''
+
+   
         #CanalMensaje.objects.create()
         return JsonResponse(data_json)
         

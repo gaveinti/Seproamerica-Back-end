@@ -41,6 +41,9 @@ class CanalMensaje(ModelBase):
 
 
 
+    #def notify_mensaje(sender,instance,created,**kwargs):
+    #    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+    #post_save.connect(notify_mensaje,sender=usuario)
 
 
     def obtener_data_mensaje_usuarios(id_canal):
@@ -55,6 +58,10 @@ class CanalMensaje(ModelBase):
 
     def __str__(self):
         return str(self.canal)
+
+#def notify_mensaje(sender,instance,created,**kwargs):
+#    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+#post_save.connect(notify_mensaje,sender=CanalMensaje)
 
 class CanalUsuario(ModelBase):
     canal = models.ForeignKey("Canal", null=True, on_delete=models.CASCADE)
@@ -124,6 +131,18 @@ class CanalManager(models.Manager):
         qs =usuario.objects.filter(cedula=id_usuario)  
         return qs
 
+    def notify_mensaje(self,emisor,receptor,texto,**kwargs):
+        #print(instance+"===========")
+        print(receptor+"===========")
+        print(emisor+"===========")
+        print(texto+"===========")
+        
+        
+        receptor_i=usuario.objects.filter(correo=receptor).first()
+        emisor_i=usuario.objects.filter(correo=emisor).first()
+        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Cualquiera')
+        
+   
 
         
 class Canal(ModelBase):
@@ -134,10 +153,3 @@ class Canal(ModelBase):
     id_servicio = models.CharField(max_length=30)
     usuarios = models.ManyToManyField(User, blank=True, through=CanalUsuario)
     objects = CanalManager()
-
-
-
-def notify_mensaje(sender,instance,created,**kwargs):
-    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
-post_save.connect(notify_mensaje,sender=CanalMensaje)
-

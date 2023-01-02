@@ -226,13 +226,3 @@ class detallePerfilOp(models.Model):
     cargo = models.ForeignKey(cargo, on_delete=models.CASCADE)
     idPersonalOp = models.ForeignKey(personalOperativo, on_delete=models.CASCADE)
     estado = models.CharField(max_length=20)
-
-
-
-
-
-
-
-
-
-
