@@ -37,7 +37,7 @@ class CanalMensaje(ModelBase):
     canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.TextField()
-    #leido = models.BooleanField() 
+    check_leido = models.CharField(max_length=100)
 
 
 
@@ -48,13 +48,17 @@ class CanalMensaje(ModelBase):
 
     def obtener_data_mensaje_usuarios(id_canal):
         qs = CanalMensaje.objects.filter(
-            canal_id=id_canal).values("canal__servicio","canal__id_servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
+            canal_id=id_canal).values("canal__servicio","canal__id_servicio","id","check_leido","texto", "usuario","tiempo","usuario__rol","usuario__correo")
 
         mensajes = list(qs.order_by("tiempo"))
 
         return list(mensajes)
 
-
+    def verificar_leido(id_mensaje,sms_check):
+        qs=CanalMensaje.objects.filter(
+            id=id_mensaje
+        )
+        return qs.update(check_leido=sms_check)
 
     def __str__(self):
         return str(self.canal)
@@ -140,7 +144,7 @@ class CanalManager(models.Manager):
         
         receptor_i=usuario.objects.filter(correo=receptor).first()
         emisor_i=usuario.objects.filter(correo=emisor).first()
-        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Cualquiera')
+        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Nuevo Mensaje')
         
    
 

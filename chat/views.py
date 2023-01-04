@@ -40,10 +40,12 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
         nuevo_mensaje=CanalMensaje(
             canal=canal_c,
             usuario=usuario_canal,
-            texto=data_json["texto"]
+            texto=data_json["texto"],
+            check_leido=data_json["check_leido"]
+
         )
         def notificar(**kwargs):
-            Canal.objects.notify_mensaje(usuario_actual,usuario_receptor,"Mensaje Nuevo")
+            Canal.objects.notify_mensaje(usuario_actual,usuario_receptor,data_json["texto"])
         
         #Canal.objects.notificar()
         
@@ -94,6 +96,9 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
 
         
         mensajes=CanalMensaje.obtener_data_mensaje_usuarios(canal.id)
+
+        
+        print()
         print("servicio",canal.servicio)
         return JsonResponse({
             'canal':canal.id,
@@ -105,6 +110,7 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
             'mensajes':mensajes
             
             })
+
 
 @api_view(['GET'])
 @csrf_exempt
@@ -150,6 +156,16 @@ def obtener_canales_usuario_actual(request,usuario_actual):
    
     return JsonResponse(canales_con_todos_los_mensajes_por_usuario,safe=False)
 
+
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def actualizar_sms_leido(request,id_mensaje,check_leido):
+    if request.method == 'GET':
+        qs = CanalMensaje.verificar_leido(id_mensaje,check_leido)
+    
+        return JsonResponse({
+            'data':qs,
+            },safe=False)
 
 '''
 

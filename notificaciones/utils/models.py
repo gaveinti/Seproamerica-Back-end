@@ -67,6 +67,7 @@ class AbstractNotificacion(models.Model):
         info='Info','info'
         wrong='Wrong','wrong',
         cualquiera='Cualquiera','cualquiera',
+        mensaje='Nuevo Mensaje','nuevo mensaje',
         servicio_solicitado="Servicio solicitado","servicio_solicitado",
         servicio_pagado="Servicio pagado","servicio_pagado",
         servicio_cancelado="Servicio cancelado","servicio_cancelado"

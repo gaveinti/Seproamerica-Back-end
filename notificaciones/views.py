@@ -8,6 +8,8 @@ from rest_framework.decorators import api_view
 from swapper import load_model
 
 Notificacion= load_model('notificaciones','Notificacion')
+TokenNotificacion= load_model('notificaciones','TokenNotificacion')
+Usuario=load_model('empresa','usuario')
 
 @api_view(['GET'])
 @csrf_exempt
@@ -43,3 +45,23 @@ def marcar_como_leido(request,id):
             },safe=False)
     
 
+@api_view(['POST'])
+@csrf_exempt
+def guardarTokenMovil(request):
+    
+    if request.method=='POST':
+        data=request.data
+        user= Usuario.objects.filter(cedula=data['cedula']).first()
+        if(user): 
+            print("user:",user)
+            print("data:",data)
+            print("data:",data['token'])
+                    
+            
+            qs= TokenNotificacion(
+                token=data['token'],
+                usuario=user
+            )
+            qs.save()
+            return JsonResponse({'data':'ok'})
+            
