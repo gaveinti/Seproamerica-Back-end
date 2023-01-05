@@ -13,6 +13,7 @@ from notificaciones.signals import notificar
 
 
 
+
 from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.decorators import api_view
@@ -44,13 +45,13 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
             check_leido=data_json["check_leido"]
 
         )
+        
         def notificar(**kwargs):
-            Canal.objects.notify_mensaje(usuario_actual,usuario_receptor,data_json["texto"])
+            return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
         
         #Canal.objects.notificar()
         
         #Canal.objects.notify_mensaje(emisor=usuario_receptor,receptor=usuario_actual,texto="Nuevo Mensaje")
-        
         nuevo_mensaje.save()
         post_save.connect(notificar(),sender=CanalMensaje)
 

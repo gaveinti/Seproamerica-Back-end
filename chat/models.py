@@ -147,7 +147,10 @@ class CanalManager(models.Manager):
         notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Nuevo Mensaje')
         
    
-
+'''def notify_mensaje(sender,instance,created,**kwargs):
+            notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+post_save.connect(notify_mensaje,sender=CanalMensaje)
+'''
         
 class Canal(ModelBase):
     # para 1 o mas usuarios conectados

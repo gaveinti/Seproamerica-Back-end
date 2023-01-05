@@ -7,6 +7,11 @@ from rest_framework.decorators import api_view
 
 from swapper import load_model
 
+# Send to single device.
+from pyfcm import FCMNotification
+
+
+
 Notificacion= load_model('notificaciones','Notificacion')
 TokenNotificacion= load_model('notificaciones','TokenNotificacion')
 Usuario=load_model('empresa','usuario')
@@ -47,7 +52,7 @@ def marcar_como_leido(request,id):
 
 @api_view(['POST'])
 @csrf_exempt
-def guardarTokenMovil(request):
+def guardar_token_movil(request):
     
     if request.method=='POST':
         data=request.data
@@ -64,4 +69,35 @@ def guardarTokenMovil(request):
             )
             qs.save()
             return JsonResponse({'data':'ok'})
-            
+
+@api_view(['GET'])
+@csrf_exempt        
+def obtener_tokens(request):
+    if request.method=='GET':
+        qs= TokenNotificacion.objects.all().values_list('token',flat=True)
+        print(TokenNotificacion.objects.all().values_list('token'))
+        return JsonResponse({'tokens':list(qs)},safe=False)
+
+
+@api_view(['POST'])
+@csrf_exempt  
+def notificar(request):
+        if request.method=='POST':
+            API_KEY_FCM=request.data['API_KEY_FCM']
+            titulo=request.data['titulo']
+            descripcion=request.data['descripcion']
+            print(API_KEY_FCM)
+
+            token_ids_registration= TokenNotificacion.objects.all().values_list('token',flat=True)
+            push_service = FCMNotification(api_key=API_KEY_FCM)
+
+            # Send to multiple devices by passing a list of ids.
+            registration_ids = list(token_ids_registration)
+            message_title = titulo
+            message_body = descripcion
+            result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
+            print(result)
+            return JsonResponse({'data':'ok'})
+
+
+
