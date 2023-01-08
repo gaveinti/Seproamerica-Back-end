@@ -5,6 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import CanalMensaje,Canal, CanalUsuario
 from django.http import HttpResponse,Http404,JsonResponse
 
+#built-in signals
+from django.db.models.signals import post_save
+
+#signals
+from notificaciones.signals import notificar
+
+
 
 
 from django.views.decorators.csrf import csrf_exempt
@@ -34,10 +41,38 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
         nuevo_mensaje=CanalMensaje(
             canal=canal_c,
             usuario=usuario_canal,
-            texto=data_json["texto"]
+            texto=data_json["texto"],
+            check_leido=data_json["check_leido"]
+
         )
-        nuevo_mensaje.save()
         
+        def notificar(**kwargs):
+            return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
+        
+        #Canal.objects.notificar()
+        
+        #Canal.objects.notify_mensaje(emisor=usuario_receptor,receptor=usuario_actual,texto="Nuevo Mensaje")
+        nuevo_mensaje.save()
+        post_save.connect(notificar(),sender=CanalMensaje)
+
+        #CanalMensaje.notificar_nuevo_mensaje(usuario_actual,usuario_receptor,text="Nuevo Mensaje")
+        #notificar.send(sender=usuario_actual,destiny=usuario_receptor,verbo="Nuevo Mensaje",level='success')
+
+
+        #Envio de notificacion cuando se agrega un mensaje
+        '''def notify_mensaje(sender,instance,created,**kwargs):
+            notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+        post_save.connect(notify_mensaje,sender=CanalMensaje)'''
+        '''
+        def notify_mensaje(sender,instance,created,**kwargs):
+            receptor=usuario.objects.filter(correo=usuario_receptor)
+            print(receptor)
+            notificar.send(instance.usuario,destiny=receptor.first(),verbo=instance.texto,level='success')
+        post_save.connect(notify_mensaje,sender=CanalMensaje)
+
+        '''
+
+   
         #CanalMensaje.objects.create()
         return JsonResponse(data_json)
         
@@ -62,6 +97,9 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
 
         
         mensajes=CanalMensaje.obtener_data_mensaje_usuarios(canal.id)
+
+        
+        print()
         print("servicio",canal.servicio)
         return JsonResponse({
             'canal':canal.id,
@@ -73,6 +111,7 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
             'mensajes':mensajes
             
             })
+
 
 @api_view(['GET'])
 @csrf_exempt
@@ -118,6 +157,16 @@ def obtener_canales_usuario_actual(request,usuario_actual):
    
     return JsonResponse(canales_con_todos_los_mensajes_por_usuario,safe=False)
 
+
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def actualizar_sms_leido(request,id_mensaje,check_leido):
+    if request.method == 'GET':
+        qs = CanalMensaje.verificar_leido(id_mensaje,check_leido)
+    
+        return JsonResponse({
+            'data':qs,
+            },safe=False)
 
 '''
 

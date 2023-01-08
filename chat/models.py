@@ -37,24 +37,35 @@ class CanalMensaje(ModelBase):
     canal = models.ForeignKey("Canal", on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.TextField()
-    #leido = models.BooleanField() 
+    check_leido = models.CharField(max_length=100)
 
 
 
+    #def notify_mensaje(sender,instance,created,**kwargs):
+    #    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+    #post_save.connect(notify_mensaje,sender=usuario)
 
 
     def obtener_data_mensaje_usuarios(id_canal):
         qs = CanalMensaje.objects.filter(
-            canal_id=id_canal).values("canal__servicio","canal__id_servicio","texto", "usuario","tiempo","usuario__rol","usuario__correo")
+            canal_id=id_canal).values("canal__servicio","canal__id_servicio","id","check_leido","texto", "usuario","tiempo","usuario__rol","usuario__correo")
 
         mensajes = list(qs.order_by("tiempo"))
 
         return list(mensajes)
 
-
+    def verificar_leido(id_mensaje,sms_check):
+        qs=CanalMensaje.objects.filter(
+            id=id_mensaje
+        )
+        return qs.update(check_leido=sms_check)
 
     def __str__(self):
         return str(self.canal)
+
+#def notify_mensaje(sender,instance,created,**kwargs):
+#    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+#post_save.connect(notify_mensaje,sender=CanalMensaje)
 
 class CanalUsuario(ModelBase):
     canal = models.ForeignKey("Canal", null=True, on_delete=models.CASCADE)
@@ -124,7 +135,22 @@ class CanalManager(models.Manager):
         qs =usuario.objects.filter(cedula=id_usuario)  
         return qs
 
-
+    def notify_mensaje(self,emisor,receptor,texto,**kwargs):
+        #print(instance+"===========")
+        print(receptor+"===========")
+        print(emisor+"===========")
+        print(texto+"===========")
+        
+        
+        receptor_i=usuario.objects.filter(correo=receptor).first()
+        emisor_i=usuario.objects.filter(correo=emisor).first()
+        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Nuevo Mensaje')
+        
+   
+'''def notify_mensaje(sender,instance,created,**kwargs):
+            notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
+post_save.connect(notify_mensaje,sender=CanalMensaje)
+'''
         
 class Canal(ModelBase):
     # para 1 o mas usuarios conectados
@@ -134,10 +160,3 @@ class Canal(ModelBase):
     id_servicio = models.CharField(max_length=30)
     usuarios = models.ManyToManyField(User, blank=True, through=CanalUsuario)
     objects = CanalManager()
-
-
-
-def notify_mensaje(sender,instance,created,**kwargs):
-    notificar.send(instance.usuario,destiny=instance.usuario,verbo=instance.texto,level='success')
-post_save.connect(notify_mensaje,sender=CanalMensaje)
-

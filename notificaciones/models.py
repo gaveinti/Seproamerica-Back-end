@@ -11,3 +11,5 @@ class Notificacion(AbstractNotificacion):
 class TokenNotificacion(models.Model):
     usuario=models.ForeignKey(usuario, on_delete=models.CASCADE)
     token=models.TextField()
+
+

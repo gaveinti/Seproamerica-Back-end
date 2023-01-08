@@ -22,7 +22,7 @@ class usuario(models.Model):
     nombres = models.CharField(max_length=50)
     fechaNac = models.DateField()
     sexo = models.CharField(max_length=30,choices=sexo_CHOICES)
-    direccion = models.EmailField()
+    direccion = models.CharField(max_length=70)
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(max_length=70, unique=True)
     contrasenia = models.CharField(max_length=15)
@@ -229,13 +229,3 @@ class detallePerfilOp(models.Model):
     cargo = models.ForeignKey(cargo, on_delete=models.CASCADE)
     idPersonalOp = models.ForeignKey(personalOperativo, on_delete=models.CASCADE)
     estado = models.CharField(max_length=20)
-
-
-
-
-
-
-
-
-
-
