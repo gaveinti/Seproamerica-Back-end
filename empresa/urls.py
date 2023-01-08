@@ -9,12 +9,14 @@ urlpatterns = [
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
     re_path(r'^api/clienteRegistro$', views.clienteRegistro),
     re_path(r'^api/obtenerCliente/(?P<cedula_Cliente>[0-9]+)/$', views.obtenerCliente),
-    re_path(r'^api/actualizarServicio/(?P<pk>[0-9]+)/$', views.actualizarServicio),
+    re_path(r'^api/servicio_seleccionar_actualizar_eliminar/(?P<nombre_Servicio>[a-zA-Z_]+)/$', views.servicio_seleccionar_actualizar_eliminar),
 
     
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
     re_path(r'^api/personalAdminRegistro$', views.adminRegistro),
     re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador),
+
+    re_path(r'^api/personalOperativoRegistro$', views.personalOpRegistro),
 
 
     re_path(r'api/visualizarPersonal/', views.personalApi),
@@ -25,6 +27,10 @@ urlpatterns = [
     re_path(r'api/visualizarArmamentos/',views.obtenerArmamento),
     re_path(r'api/visualizarMobil/',views.obtenerMobil),
     re_path(r'api/visualizarSucursales/',views.obtenerSucursal),
+    re_path(r'api/visualizarTiposServicios/',views.obtenerTiposServicios),
+    re_path(r'^api/crearServicio$',views.crearServicio),
+
+
 
  
 

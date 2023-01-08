@@ -1,13 +1,13 @@
 from rest_framework import serializers 
 from empresa.models import usuario 
 from empresa.models import vehiculo, mobil, armamento, candado, personalOperativo, personalAdministrativo, pedido, cliente, servicio
-from empresa.models import sucursal
+from empresa.models import sucursal, tipoServicio
 
 class UsuarioSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = usuario
-        fields = ('sexo_CHOICES',
+        fields = ('sexo',
                   'cedula',
                   'apellidos',
                   'nombres',
@@ -98,21 +98,23 @@ class PersonalOperativoSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = personalOperativo
-        fields = ('sexo_CHOICES',
-                  'idPersonal',
+        fields = ('idPersonal',
                   'numCedula',
                   'apellidos',
                   'nombres',
                   'fechaNac',
-                  'sexo',
-                  'direccion',
+                  'profesion',
                   'telefono',
                   'correo',
+                  'direccion',
+                  'sexo',
                   'fechaRegistro',
-                  #'agregadoPor',
-                  #'sucursal',
-                  #'estado',
-                  #'rol'
+                  'sucursal',
+                  'estado',
+                  'cargo',
+                  'fotoOp',
+                  'licencia_conductor',
+                  'licencia_uso_armamento'
                   )
 
 class MobilSerializer(serializers.ModelSerializer):
@@ -173,8 +175,15 @@ class ServicioSerializer(serializers.ModelSerializer):
                   'fecha_Creacion',
                   'tipo_Servicio',
                   'administrador_Creador',
-                  'incluir_Vehiculo',
                   'icono'
+                )
+
+class TipoServicioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = tipoServicio
+        fields = ('idTipo',
+                  'tarifa'
                 )
 
 class SucursalSerializer(serializers.ModelSerializer):

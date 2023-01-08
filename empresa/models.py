@@ -94,14 +94,18 @@ class personalOperativo(models.Model):
     apellidos = models.CharField(max_length=50)
     nombres = models.CharField(max_length=50)
     fechaNac = models.DateField()
-    sexo = models.CharField(max_length=30,choices=sexo_CHOICES)
-    direccion = models.EmailField()
+    profesion = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
     correo = models.EmailField(max_length=70, unique=True)
+    direccion = models.CharField(max_length=100)
+    sexo = models.CharField(max_length=30,choices=sexo_CHOICES)
     fechaRegistro = models.DateTimeField(auto_now=False, auto_now_add=True)
     sucursal = models.ForeignKey(sucursal, on_delete=models.CASCADE)
-    estado = models.ForeignKey(estado, on_delete=models.CASCADE)
-    fotoOp = models.ImageField(upload_to='uploads/')
+    estado = models.ForeignKey(estado, on_delete=models.CASCADE, blank=True, null=True)
+    cargo = models.ForeignKey(cargo, on_delete=models.CASCADE)
+    fotoOp = models.ImageField(upload_to='uploads/', blank=True, null=True)
+    licencia_conductor = models.BooleanField()
+    licencia_uso_armamento = models.BooleanField()
 
 class Personal_Operativo(usuario):
     idPersonal = models.AutoField(primary_key=True)
@@ -114,17 +118,16 @@ class Personal_Operativo(usuario):
 
 class tipoServicio(models.Model):
     idTipo = models.AutoField(primary_key=True)
-    tarifa = models.FloatField(default=0)
+    tarifa = models.CharField(max_length=100)
 
 class servicio(models.Model):
     idServicio = models.AutoField(primary_key=True)
     nombreServicio = models.CharField(max_length=50)
     costo = models.FloatField()
-    detalles = models.CharField(max_length=100)
+    detalles = models.CharField(max_length=1000)
     fecha_Creacion = models.DateTimeField()
     tipo_Servicio = models.ForeignKey(tipoServicio, on_delete=models.CASCADE)
     administrador_Creador = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
-    incluir_Vehiculo = models.BooleanField()
     icono = models.URLField()
 
 

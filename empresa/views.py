@@ -13,7 +13,7 @@ from django.contrib import messages
 
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
 from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente
+from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente, tipoServicio
 from empresa.serializers import *
 
 import json
@@ -51,13 +51,43 @@ def obtenerAdministrador(request, cedula_Admin):
 
 # ---------------------------------------------------------- Fin --------------------------------------------------
 
+#--------------------------------------------- API's para personal operativo -------------------------------------------------
+#API para luego de registrar personal operativo
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def personalOpRegistro(request):
+    context = {}
+    if request.method == 'POST':
+        personalOp_A_Registrar_Data = JSONParser().parse(request)
+        personalOp_A_Registrar_Serializer = PersonalOperativoSerializer(data=personalOp_A_Registrar_Data )
+        if personalOp_A_Registrar_Serializer.is_valid():
+            personalOp_A_Registrar_Serializer.save()
+            return JsonResponse(personalOp_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(personalOp_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ---------------------------------------------------------- Fin --------------------------------------------------
+
+#--------------------------------------------- API's para servicio -------------------------------------------------
+
+#API para crear un servicio
+@api_view(['GET', 'POST'])
+@csrf_exempt
+def crearServicio(request):
+    if request.method == 'POST':
+        servicio_Nuevo = JSONParser().parse(request)
+        servicio_Nuevo_Serializer = ServicioSerializer(data = servicio_Nuevo)
+        if servicio_Nuevo_Serializer.is_valid():
+            servicio_Nuevo_Serializer.save()
+            return JsonResponse(servicio_Nuevo_Serializer.data, status=status.HTTP_201_CREATED)
+        return JsonResponse(servicio_Nuevo_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #API para actualizar la información de un servicio
-@api_view(['PUT'])
+@api_view(['PUT', 'DELETE', 'GET'])
 @csrf_exempt
-def actualizarServicio(request, pk):
+def servicio_seleccionar_actualizar_eliminar(request, nombre_Servicio):
     try:
-        servicio_A_Encontrar = servicio.objects.get(pk = pk)
+        servicio_A_Encontrar = servicio.objects.get(nombreServicio = nombre_Servicio)
 
         if request.method == 'PUT':
             servicio_A_Encontrar_data = JSONParser().parse(request)
@@ -66,6 +96,12 @@ def actualizarServicio(request, pk):
                 servicio_A_Encontrar_serializer.save()
                 return JsonResponse(servicio_A_Encontrar_serializer.data)
             return JsonResponse(servicio_A_Encontrar_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == 'GET':
+            servicio_A_Encontrar_serializer = ServicioSerializer(servicio_A_Encontrar)
+            return JsonResponse(servicio_A_Encontrar_serializer.data)
+        elif request.method == 'DELETE':
+            servicio_A_Encontrar.delete()
+            return JsonResponse({'mensaje': 'El servicio fue eliminado exitosamente'}, status=status.HTTP_204_NO_CONTENT)
 
 
     except servicio.DoesNotExist:
@@ -85,6 +121,18 @@ def obtenerServicio(request):
         servicios_serializer = ServicioSerializer(servicios, many=True)
         return JsonResponse(servicios_serializer.data, safe=False)
 
+#Api para obtener los tipos de servicios y presentarlos como opcion al momento de crear un nuevo servicio
+@api_view(['GET', 'POST', 'DELETE'])
+def obtenerTiposServicios(request):
+    if request.method == 'GET':
+        tipo_servicio =  tipoServicio.objects.all()
+
+        tarifa = request.GET.get('tarifa', None)
+        if tarifa is not None:
+            tipo_servicio = tipo_servicio.filter(tarifa_icontains=tarifa)
+
+        tipo_servicio_serializer = TipoServicioSerializer(tipo_servicio, many=True)
+        return JsonResponse(tipo_servicio_serializer.data, safe=False)
 
 #API VIEW para obtener todas y enviar solicitud de servicio creado por el cliente
 @api_view(['GET', 'POST'])
@@ -106,6 +154,9 @@ def solicitarServicio(request):
 
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
+
+# -------------------------------------------- Fin ------------------------------------------------------------
+
 
 
 #API para luego de registrar usuario, tambien registrar cliente
