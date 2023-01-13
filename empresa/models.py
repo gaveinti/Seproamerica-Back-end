@@ -146,13 +146,13 @@ class pedido(models.Model):
     longitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
     cantidad_Empleados_Asignados = models.IntegerField()
     cantidad_vehiculos = models.IntegerField(blank=True, null=True)
+    candado_Satelital=models.BooleanField(blank=True,null=True)
     detalle = models.CharField(max_length=300)
     estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
     metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
     idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
     administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     personal_Encargado = models.ForeignKey(personalOperativo, on_delete=models.CASCADE, blank=True, null=True)
-
     cliente_solicitante = models.ForeignKey(cliente, on_delete=models.CASCADE)
     
 
