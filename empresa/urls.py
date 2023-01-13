@@ -15,6 +15,11 @@ urlpatterns = [
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
 
+    re_path(r'^api/obtenerTodoPersonalOperativo$', views.obtenerTodoPersonalOperativo),
+    re_path(r'^api/eliminarPersonalOperativo/(?P<cedula_PersonalOp>[0-9]+)/$', views.eliminarPersonalOperativo),
+    re_path(r'^api/obtener_personalop_especifico/(?P<cedula_PersonalOp>[0-9]+)/$', views.obtener_personalop_especifico),
+    re_path(r'^api/actualizar_personalop/(?P<cedula_PersonalOp>[0-9]+)/$', views.actualizar_personalop),
+
   
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
     re_path(r'^api/personalAdminRegistro$', views.adminRegistro),

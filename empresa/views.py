@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from django.contrib import messages
 
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
-from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer
+from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer, PersonalOperativoSerializer
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente, tipoServicio
 from empresa.serializers import *
 
@@ -65,6 +65,64 @@ def personalOpRegistro(request):
             return JsonResponse(personalOp_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(personalOp_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+#API para obtener todo el personal operativo
+@api_view(['GET'])
+@csrf_exempt
+def obtenerTodoPersonalOperativo(request):
+    if request.method == 'GET':
+        personalOp = personalOperativo.objects.all()
+
+        cedula = request.GET.get('numCedula', None)
+        if cedula is not None:
+            personalOp = personalOp.filter(cedula_icontains=cedula)
+
+        personalOp_serializer = PersonalOperativoSerializer(personalOp, many=True)
+        return JsonResponse(personalOp_serializer.data, safe=False)
+
+@api_view(['DELETE'])
+@csrf_exempt
+def eliminarPersonalOperativo(request, cedula_PersonalOp):
+    try:
+        personalOp = personalOperativo.objects.get(numCedula=cedula_PersonalOp)
+
+        if request.method == 'DELETE':
+            personalOp.delete()
+            return JsonResponse({'message': 'El personal operativo ha sido eliminado exitosamente'}, status=status.HTTP_204_NO_CONTENT)
+
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@csrf_exempt
+def obtener_personalop_especifico(request, cedula_PersonalOp):
+    try:
+        personalOp = personalOperativo.objects.get(numCedula=cedula_PersonalOp)
+
+        if request.method == 'GET':
+            personalOp_serializer = PersonalOperativoSerializer(personalOp)
+            return JsonResponse(personalOp_serializer.data)
+        
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['PUT'])
+@csrf_exempt
+def actualizar_personalop(request, cedula_PersonalOp):
+    try:
+        personalOp = personalOperativo.objects.get(numCedula=cedula_PersonalOp)
+
+        if request.method == 'PUT':
+            personalOp_data = JSONParser().parse(request)
+            personalOp_serializer = PersonalOperativoSerializer(personalOp, data=personalOp_data)
+            if personalOp_serializer.is_valid():
+                personalOp_serializer.save()
+                return JsonResponse(personalOp_serializer.data)
+            return JsonResponse(personalOp_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
 
 # ---------------------------------------------------------- Fin --------------------------------------------------
 
