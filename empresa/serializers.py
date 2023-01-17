@@ -95,7 +95,7 @@ class PersonalAdministrativoSerializer(serializers.ModelSerializer):
                   )
 
 class PersonalOperativoSerializer(serializers.ModelSerializer):
- 
+
     class Meta:
         model = personalOperativo
         fields = ('idPersonal',
