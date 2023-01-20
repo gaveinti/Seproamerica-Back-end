@@ -101,6 +101,36 @@ def notificar_FCM(request):
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
             print(result)
             return JsonResponse({'data':'ok'})
+ 
+
+@api_view(['POST'])
+@csrf_exempt 
+def notificar_administradores(request):
+    if request.method=='POST':
+        qs=Usuario.objects.filter(rol=1).values()
+        administradores=list(qs)
+        contenido=request.data['contenido']
+        emisor=request.data['emisor']
+        #receptor=request.data['receptor']
+        level=request.data['level']        
+        for admin in administradores:
+            print(admin['correo'])
+            Notificacion.objects.notificar_evento(emisor=emisor,receptor=admin['correo'],texto=contenido,level=level)
+        
+            #return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
+            
+        
+        #Canal.objects.notificar()
+        
+        #Canal.objects.notify_mensaje(emisor=usuario_receptor,receptor=usuario_actual,texto="Nuevo Mensaje")
+        #if(level=="Nuevo mensaje")
+        #post_save.connect(notificar(),sender=CanalMensaje)
+        return JsonResponse({
+            #'emisor':emisor,
+            'notificado':True
+            #'contenido':contenido,
+            #'level':level
+            })
 
 
 @api_view(['POST'])
@@ -111,7 +141,7 @@ def notificar(request):
         emisor=request.data['emisor']
         receptor=request.data['receptor']
         level=request.data['level']        
-        Notificacion.objects.notificar_evento(emisor=emisor,receptor=receptor,texto=contenido)
+        Notificacion.objects.notificar_evento(emisor=emisor,receptor=receptor,texto=contenido,level=level)
             #return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
             
         

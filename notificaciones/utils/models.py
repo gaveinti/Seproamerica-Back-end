@@ -56,16 +56,17 @@ class NotificacionQueryset(models.QuerySet):
         return qs.update(read=True)
 
 
-    def notificar_evento(self,emisor,receptor,texto,**kwargs):
+    def notificar_evento(self,emisor,receptor,texto,level,**kwargs):
         #print(instance+"===========")
         print(receptor+"===========")
         print(emisor+"===========")
         print(texto+"===========")
+
         
         
         receptor_i=usuario.objects.filter(correo=receptor).first()
         emisor_i=usuario.objects.filter(correo=emisor).first()
-        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level='Nuevo Mensaje')
+        notificar.send(emisor_i,destiny=receptor_i,verbo=texto,level=level)
         
    
 

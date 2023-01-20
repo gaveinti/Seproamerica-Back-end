@@ -227,6 +227,19 @@ def solicitarServicio(request):
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
 
+@api_view(['GET'])
+@csrf_exempt
+def solicitarServicios(request,cedula):
+    if request.method == 'GET':
+        solicitud_Servicio = pedido.objects.filter(cliente_solicitante__cedula=cedula)
+
+        id_Pedido = request.GET.get('idPedido', None)
+        if id_Pedido is not None:
+            solicitud_Servicio = solicitud_Servicio.filter(id_Pedido_icontains=id_Pedido)
+
+        solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+        return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
+
 # -------------------------------------------- Fin ------------------------------------------------------------
 
 

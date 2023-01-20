@@ -36,11 +36,13 @@ class usuario(models.Model):
 class estado(models.Model):
     idEstado = models.AutoField(primary_key=True)
     estado = models.CharField(max_length=30)
-
+    
 class estadoPedido(models.Model):
     estadoPe_CHOICES = (("En Espera","En Espera"),("En Curso","En Curso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
     idEstadoP = models.AutoField(primary_key=True)
     estado = models.CharField(max_length=20,choices=estadoPe_CHOICES)
+    def __str__(self):
+            return self.estado
 
 class cargo(models.Model):
     tipoCargo_CHOICES=(("Ad","administrativo"),("Op","operativo"))
@@ -59,7 +61,8 @@ class personalAdministrativo(models.Model):
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
     fechaModificacion = models.DateField(auto_now=True, auto_now_add=False)
     #archivosAd = models.
-
+    def __str__(self):
+                return str(self.cedula)
 class publicidad(models.Model):
     idPublicidad = models.AutoField(primary_key=True)
     autor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
@@ -73,10 +76,15 @@ class publicidad(models.Model):
 class cliente(models.Model):
     idCliente = models.AutoField(primary_key=True)
     cedula = models.ForeignKey(usuario, on_delete=models.CASCADE)
+    def __str__(self):
+                return str(self.cedula)
+    
 
 class metodoPago(models.Model):
     idTipo = models.AutoField(primary_key=True)
     metodo = models.CharField(max_length=20)
+    def __str__(self):
+                return self.metodo
 
 class tarjeta(models.Model):
     tipoTarjeta_CHOICES = (("debito","debito"),("credito","credito"))
@@ -129,7 +137,8 @@ class servicio(models.Model):
     tipo_Servicio = models.ForeignKey(tipoServicio, on_delete=models.CASCADE)
     administrador_Creador = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     icono = models.URLField()
-
+    def __str__(self):
+                return self.nombreServicio
 
 class pedido(models.Model):
     idPedido = models.AutoField(primary_key=True)
