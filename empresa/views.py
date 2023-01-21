@@ -229,9 +229,9 @@ def solicitarServicio(request):
 
 @api_view(['GET'])
 @csrf_exempt
-def solicitarServicios(request,cedula):
+def solicitarServicioPorUsuario(request,id_cliente):
     if request.method == 'GET':
-        solicitud_Servicio = pedido.objects.filter(cliente_solicitante__cedula=cedula)
+        solicitud_Servicio = pedido.objects.filter(cliente_solicitante=id_cliente)
 
         id_Pedido = request.GET.get('idPedido', None)
         if id_Pedido is not None:
@@ -239,7 +239,6 @@ def solicitarServicios(request,cedula):
 
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
-
 # -------------------------------------------- Fin ------------------------------------------------------------
 
 

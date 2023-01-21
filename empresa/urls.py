@@ -14,6 +14,7 @@ urlpatterns = [
 
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
+    re_path(r'^api/solicitarServicio/(?P<id_cliente>[0-9]+)/$', views.solicitarServicioPorUsuario),
     
 
     re_path(r'^api/obtenerTodoPersonalOperativo$', views.obtenerTodoPersonalOperativo),
