@@ -38,11 +38,11 @@ class estado(models.Model):
     estado = models.CharField(max_length=30)
     
 class estadoPedido(models.Model):
-    estadoPe_CHOICES = (("En Espera","En Espera"),("En Curso","En Curso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
-    idEstadoP = models.AutoField(primary_key=True)
+    estadoPe_CHOICES = (("Pendiente","Pendiente"),("Proceso","Proceso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
+    idEstadoP = models.IntegerField(primary_key=True)
     estado = models.CharField(max_length=20,choices=estadoPe_CHOICES)
     def __str__(self):
-            return self.estado
+            return str(self.idEstadoP)+","+self.estado
 
 class cargo(models.Model):
     tipoCargo_CHOICES=(("Ad","administrativo"),("Op","operativo"))
@@ -149,10 +149,13 @@ class pedido(models.Model):
     fecha_Finalizacion = models.DateField()
     hora_Inicio = models.TimeField()
     hora_Finalizacion = models.TimeField()
+    duracion=models.TextField(blank=True,null=True)
     latitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
     longitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
     latitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
     longitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
+    origen=models.TextField(blank=True,null=True)
+    destino=models.TextField(blank=True,null=True)
     cantidad_Empleados_Asignados = models.IntegerField()
     cantidad_vehiculos = models.IntegerField(blank=True, null=True)
     candado_Satelital=models.BooleanField(blank=True,null=True)

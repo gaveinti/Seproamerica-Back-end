@@ -15,7 +15,8 @@ urlpatterns = [
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
     re_path(r'^api/solicitarServicio/(?P<id_cliente>[0-9]+)/$', views.solicitarServicioPorUsuario),
-    
+    re_path(r'^api/solicitarIdEstado/(?P<nombre_servicio>[A-Za-z]+)/$', views.solicitarIDEstadoServicio),
+
 
     re_path(r'^api/obtenerTodoPersonalOperativo$', views.obtenerTodoPersonalOperativo),
     re_path(r'^api/eliminarPersonalOperativo/(?P<cedula_PersonalOp>[0-9]+)/$', views.eliminarPersonalOperativo),
@@ -26,7 +27,10 @@ urlpatterns = [
   
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
     re_path(r'^api/personalAdminRegistro$', views.adminRegistro),
-    re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador),
+    re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin_or_id>[0-9]+)/$', views.obtenerAdministrador),
+    re_path(r'^api/getAllAdmins$', views.obtenerTodosAdministradores),
+
+    
 
     re_path(r'^api/personalOperativoRegistro$', views.personalOpRegistro),
 

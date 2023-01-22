@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
+from empresa.models import usuario,personalOperativo, estadoPedido, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
 from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer, PersonalOperativoSerializer
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente, tipoServicio
 from empresa.serializers import *
@@ -31,21 +31,51 @@ def adminRegistro(request):
             admin_A_Registrar_Serializer.save()
             return JsonResponse(admin_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(admin_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 #API para obtener un cliente de la tabla de clientes a partir de la cédula
 @api_view(['GET'])
-def obtenerAdministrador(request, cedula_Admin):
+def obtenerAdministrador(request, cedula_Admin_or_id):
 
     try: 
-        admin_A_Encontrar = personalAdministrativo.objects.get(cedula=cedula_Admin)
-
+        admin_A_Encontrar = personalAdministrativo.objects.get(cedula=cedula_Admin_or_id)
         if request.method == 'GET':
             admin_A_Encontrar_serializer = PersonalAdministrativoSerializer(admin_A_Encontrar)
-            return JsonResponse(admin_A_Encontrar_serializer.data)
+            data_usuario=usuario.objects.filter(cedula=admin_A_Encontrar_serializer.data['cedula']).values().first()
+            return JsonResponse({
+                'admin':admin_A_Encontrar_serializer.data['cedula'],
+                'data':data_usuario
+                })
+
+    except personalAdministrativo.DoesNotExist:
+        try:
+            admin_A_Encontrar = personalAdministrativo.objects.get(idPersonal=cedula_Admin_or_id)
+            if request.method == 'GET':
+                admin_A_Encontrar_serializer = PersonalAdministrativoSerializer(admin_A_Encontrar)
+                data_usuario=usuario.objects.filter(cedula=admin_A_Encontrar_serializer.data['cedula']).values().first()
+                return JsonResponse({
+                    'admin':admin_A_Encontrar_serializer.data['cedula'],
+                    'data':data_usuario
+                    })
+        
+        except personalAdministrativo.DoesNotExist:
+            return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def obtenerTodosAdministradores(request):
+    try: 
+        cedulas = list(personalAdministrativo.objects.all().values_list('cedula',flat=True))
+        print(cedulas)
+        if request.method == 'GET':
+            data=usuario.objects.filter(cedula__in=cedulas).values()
+
+            return JsonResponse({
+                'data':list(data),
+                
+            }, safe=False)
 
     except cliente.DoesNotExist:
         return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
-
 
 
 
@@ -239,6 +269,19 @@ def solicitarServicioPorUsuario(request,id_cliente):
 
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
+@api_view(['GET'])
+@csrf_exempt
+def solicitarIDEstadoServicio(request,nombre_servicio):
+    if request.method == 'GET':
+        id_estado = estadoPedido.objects.filter(estado=nombre_servicio).values().first()
+        
+        #id_Pedido = request.GET.get('idPedido', None)
+        if (id_estado):
+            #solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+            return JsonResponse({'data':id_estado,'status':status.HTTP_200_OK}, safe=False)
+        else:
+            return JsonResponse({'mensaje':'no encontrado','status':status.HTTP_400_BAD_REQUEST})
+
 # -------------------------------------------- Fin ------------------------------------------------------------
 
 
