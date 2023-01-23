@@ -112,6 +112,7 @@ class PersonalOperativoSerializer(serializers.ModelSerializer):
                   'sucursal',
                   'estado',
                   'cargo',
+                  'cargo_trabajo',
                   'fotoOp',
                   'licencia_conductor',
                   'licencia_uso_armamento'
@@ -122,7 +123,6 @@ class MobilSerializer(serializers.ModelSerializer):
     class Meta:
         model = mobil
         fields = ('numeroCell',
-                  'idEquipamiento',
                   'marca',
                   'color',
                   'usuarioApp',

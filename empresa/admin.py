@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import  * #usuario,rol,personalOperativo, personalAdministrativo,mobil 
 
 admin.site.register(usuario)
+admin.site.register(armamento)
 admin.site.register(cliente)
 admin.site.register(rol)
 admin.site.register(personalAdministrativo)

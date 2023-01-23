@@ -213,6 +213,24 @@ def solicitarServicio(request):
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
 
+#Api para actualizar pedido de servicio por parte del administrador
+@api_view(['PUT'])
+@csrf_exempt
+def actualizar_pedido_servicio(request, id_pedido):
+    try:
+        pedido_A_Encontrar = pedido.objects.get(idPedido = id_pedido)
+
+        if request.method == 'PUT':
+            pedido_A_Encontrar_data = JSONParser().parse(request)
+            pedido_A_Encontrar_serializer = PedidoSerializer(pedido_A_Encontrar, data=pedido_A_Encontrar_data)
+            if pedido_A_Encontrar_serializer.is_valid():
+                pedido_A_Encontrar_serializer.save()
+                return JsonResponse(pedido_A_Encontrar_serializer.data)
+            return JsonResponse(pedido_A_Encontrar_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except servicio.DoesNotExist:
+        return JsonResponse({'message' : 'El pedido no existe'}, status=status.HTTP_404_NOT_FOUND)
+
 # -------------------------------------------- Fin ------------------------------------------------------------
 
 
