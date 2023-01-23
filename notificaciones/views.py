@@ -85,8 +85,8 @@ def obtener_tokens(request):
 
 def obtener_token(request,cedula):
     if request.method=='GET':
-        qs= TokenNotificacion.objects.filter(usuario_cedula=cedula).values().first()
-        print(TokenNotificacion.objects.filter(usuario_cedula=cedula).values().first())
+        qs= TokenNotificacion.objects.filter(usuario_id=cedula).values().first()
+        print(TokenNotificacion.objects.filter(usuario_id=cedula).values().first())
         return JsonResponse({'res':qs},safe=False)
 
 
