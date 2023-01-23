@@ -36,11 +36,13 @@ class usuario(models.Model):
 class estado(models.Model):
     idEstado = models.AutoField(primary_key=True)
     estado = models.CharField(max_length=30)
-
+    
 class estadoPedido(models.Model):
-    estadoPe_CHOICES = (("En Espera","En Espera"),("En Curso","En Curso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
-    idEstadoP = models.AutoField(primary_key=True)
+    estadoPe_CHOICES = (("Pendiente","Pendiente"),("Proceso","Proceso"),("Finalizado","Finalizado"),("Cancelado","Cancelado"))
+    idEstadoP = models.IntegerField(primary_key=True)
     estado = models.CharField(max_length=20,choices=estadoPe_CHOICES)
+    def __str__(self):
+            return str(self.idEstadoP)+","+self.estado
 
 class cargo(models.Model):
     tipoCargo_CHOICES=(("Ad","administrativo"),("Op","operativo"))
@@ -59,7 +61,8 @@ class personalAdministrativo(models.Model):
     estado = models.ForeignKey(estado, on_delete=models.CASCADE)
     fechaModificacion = models.DateField(auto_now=True, auto_now_add=False)
     #archivosAd = models.
-
+    def __str__(self):
+                return str(self.cedula)
 class publicidad(models.Model):
     idPublicidad = models.AutoField(primary_key=True)
     autor = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
@@ -73,10 +76,15 @@ class publicidad(models.Model):
 class cliente(models.Model):
     idCliente = models.AutoField(primary_key=True)
     cedula = models.ForeignKey(usuario, on_delete=models.CASCADE)
+    def __str__(self):
+                return str(self.cedula)
+    
 
 class metodoPago(models.Model):
     idTipo = models.AutoField(primary_key=True)
     metodo = models.CharField(max_length=20)
+    def __str__(self):
+                return self.metodo
 
 class tarjeta(models.Model):
     tipoTarjeta_CHOICES = (("debito","debito"),("credito","credito"))
@@ -130,7 +138,8 @@ class servicio(models.Model):
     tipo_Servicio = models.ForeignKey(tipoServicio, on_delete=models.CASCADE)
     administrador_Creador = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     icono = models.URLField()
-
+    def __str__(self):
+                return self.nombreServicio
 
 class pedido(models.Model):
     idPedido = models.AutoField(primary_key=True)
@@ -141,19 +150,23 @@ class pedido(models.Model):
     fecha_Finalizacion = models.DateField()
     hora_Inicio = models.TimeField()
     hora_Finalizacion = models.TimeField()
+    duracion=models.TextField(blank=True,null=True)
     latitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
     longitud_Origen = models.DecimalField(max_digits=22, decimal_places=18)
     latitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
     longitud_Destino = models.DecimalField(max_digits=22, decimal_places=18)
+    origen=models.TextField(blank=True,null=True)
+    destino=models.TextField(blank=True,null=True)
     cantidad_Empleados_Asignados = models.IntegerField()
     cantidad_vehiculos = models.IntegerField(blank=True, null=True)
     detalle = models.CharField(max_length=1000)
+    candado_Satelital=models.BooleanField(blank=True,null=True)
+    detalle = models.CharField(max_length=300)
     estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
     metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
     idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
     administrador_Encargado = models.ForeignKey(personalAdministrativo, on_delete=models.CASCADE)
     personal_Encargado = models.ForeignKey(personalOperativo, on_delete=models.CASCADE, blank=True, null=True)
-
     cliente_solicitante = models.ForeignKey(cliente, on_delete=models.CASCADE)
     
 

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import obtener_notificaciones_por_usuario,obtener_no_leido,marcar_como_leido,guardar_token_movil,obtener_tokens,notificar
+from .views import obtener_notificaciones_por_usuario,obtener_no_leido,marcar_como_leido,guardar_token_movil,obtener_tokens,notificar_FCM,notificar,notificar_administradores
 
 urlpatterns=[
     path("api/notificacion/all/<str:usuario_actual>/",obtener_notificaciones_por_usuario),
@@ -9,7 +9,11 @@ urlpatterns=[
 
     path("api/notificacion/add_token/",guardar_token_movil),
     path("api/notificacion/all_token/",obtener_tokens),
-    path("api/notificacion/notificar/",notificar)
+    path("api/notificacion/notificar_fcm_movil/",notificar_FCM),
+    path("api/notificacion/notificar/",notificar),
+    path("api/notificacion/notificar_admin/",notificar_administradores)
+    
+    
     
 
     

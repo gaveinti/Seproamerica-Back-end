@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import CanalMensaje,Canal, CanalUsuario
+from notificaciones import models
 from django.http import HttpResponse,Http404,JsonResponse
 
 #built-in signals
@@ -46,14 +47,16 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
 
         )
         
-        def notificar(**kwargs):
-            return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
+        #def notificar(**kwargs):
+        #    return models.Notificacion.objects.notificar_evento(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
+            #return Canal.objects.notify_mensaje(emisor=usuario_actual,receptor=usuario_receptor,texto=data_json["texto"])
+            
         
         #Canal.objects.notificar()
         
         #Canal.objects.notify_mensaje(emisor=usuario_receptor,receptor=usuario_actual,texto="Nuevo Mensaje")
         nuevo_mensaje.save()
-        post_save.connect(notificar(),sender=CanalMensaje)
+        #post_save.connect(notificar(),sender=CanalMensaje)
 
         #CanalMensaje.notificar_nuevo_mensaje(usuario_actual,usuario_receptor,text="Nuevo Mensaje")
         #notificar.send(sender=usuario_actual,destiny=usuario_receptor,verbo="Nuevo Mensaje",level='success')
@@ -114,7 +117,6 @@ def verificar_y_crear_canal(request,id_servicio,servicio,usuario_receptor,usuari
 
 
 @api_view(['GET'])
-@csrf_exempt
 def obtener_canales_usuario_actual(request,usuario_actual):
 
     qs=usuario.objects.filter(correo=usuario_actual)
@@ -158,11 +160,11 @@ def obtener_canales_usuario_actual(request,usuario_actual):
     return JsonResponse(canales_con_todos_los_mensajes_por_usuario,safe=False)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 @csrf_exempt
-def actualizar_sms_leido(request,id_mensaje,check_leido):
+def actualizar_sms_leido(request,id_mensaje):
     if request.method == 'GET':
-        qs = CanalMensaje.verificar_leido(id_mensaje,check_leido)
+        qs = CanalMensaje.verificar_leido(id_mensaje)
     
         return JsonResponse({
             'data':qs,

@@ -11,7 +11,7 @@ from .views import (
 urlpatterns=[
     path("api/chat/<str:id_servicio>/<str:servicio>/<str:usuario_receptor>/<str:usuario_actual>/",verificar_y_crear_canal),
     path("api/chat/inbox/<str:usuario_actual>/",obtener_canales_usuario_actual),
-    path("api/chat/sms_update/<str:id_mensaje>/<str:check_leido>",actualizar_sms_leido),
+    path("api/chat/sms_update/<str:id_mensaje>/",actualizar_sms_leido),
     
     
 ]

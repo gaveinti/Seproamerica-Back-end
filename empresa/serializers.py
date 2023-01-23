@@ -153,7 +153,11 @@ class PedidoSerializer(serializers.ModelSerializer):
                   'idServicio',
                   'administrador_Encargado',
                   'personal_Encargado',
-                  'cliente_solicitante'
+                  'cliente_solicitante',
+                  'candado_Satelital',
+                  'origen',
+                  'destino',
+                  'duracion'
                 )
 
 class ClienteSerializer(serializers.ModelSerializer):

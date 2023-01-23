@@ -11,7 +11,7 @@ from rest_framework.decorators import api_view
 # Para agregar mensaje y verificar la conexion
 from django.contrib import messages
 
-from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
+from empresa.models import usuario,personalOperativo, estadoPedido, vehiculo, mobil, candado, armamento, servicio, pedido, sucursal
 from empresa.serializers import UsuarioSerializer, vehiculosSerializer, PersonalOperativoSerializer, candadosSerializer,MobilSerializer, armamentosSerializer, ServicioSerializer, PedidoSerializer, ClienteSerializer, PersonalAdministrativoSerializer, PersonalOperativoSerializer
 from empresa.models import usuario,personalOperativo, detallePerfilOp, vehiculo, mobil, candado, armamento, cliente, tipoServicio
 from empresa.serializers import *
@@ -31,10 +31,55 @@ def adminRegistro(request):
             admin_A_Registrar_Serializer.save()
             return JsonResponse(admin_A_Registrar_Serializer.data, status=status.HTTP_201_CREATED)
         return JsonResponse(admin_A_Registrar_Serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 #API para obtener un cliente de la tabla de clientes a partir de la cédula
 @api_view(['GET'])
-def obtenerAdministrador(request, cedula_Admin):
+def obtenerAdministrador(request, cedula_Admin_or_id):
+
+    try: 
+        admin_A_Encontrar = personalAdministrativo.objects.get(cedula=cedula_Admin_or_id)
+        if request.method == 'GET':
+            admin_A_Encontrar_serializer = PersonalAdministrativoSerializer(admin_A_Encontrar)
+            data_usuario=usuario.objects.filter(cedula=admin_A_Encontrar_serializer.data['cedula']).values().first()
+            return JsonResponse({
+                'admin':admin_A_Encontrar_serializer.data['cedula'],
+                'data':data_usuario
+                })
+
+    except personalAdministrativo.DoesNotExist:
+        try:
+            admin_A_Encontrar = personalAdministrativo.objects.get(idPersonal=cedula_Admin_or_id)
+            if request.method == 'GET':
+                admin_A_Encontrar_serializer = PersonalAdministrativoSerializer(admin_A_Encontrar)
+                data_usuario=usuario.objects.filter(cedula=admin_A_Encontrar_serializer.data['cedula']).values().first()
+                return JsonResponse({
+                    'admin':admin_A_Encontrar_serializer.data['cedula'],
+                    'data':data_usuario
+                    })
+        
+        except personalAdministrativo.DoesNotExist:
+            return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def obtenerTodosAdministradores(request):
+    try: 
+        cedulas = list(personalAdministrativo.objects.all().values_list('cedula',flat=True))
+        print(cedulas)
+        if request.method == 'GET':
+            data=usuario.objects.filter(cedula__in=cedulas).values()
+
+            return JsonResponse({
+                'data':list(data),
+                
+            }, safe=False)
+
+    except cliente.DoesNotExist:
+        return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+#API para obtener un cliente de la tabla de clientes a partir de la cédula
+@api_view(['GET'])
+def obtenerAdministrador_especifico(request, cedula_Admin):
 
     try: 
         admin_A_Encontrar = personalAdministrativo.objects.get(cedula=cedula_Admin)
@@ -45,9 +90,6 @@ def obtenerAdministrador(request, cedula_Admin):
 
     except cliente.DoesNotExist:
         return JsonResponse({'message': 'El administador no existe'}, status=status.HTTP_404_NOT_FOUND)
-
-
-
 
 # ---------------------------------------------------------- Fin --------------------------------------------------
 
@@ -104,6 +146,20 @@ def obtener_personalop_especifico(request, cedula_PersonalOp):
         
     except personalOperativo.DoesNotExist:
         return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@csrf_exempt
+def verificar_personal_op(request, correo):
+    try:
+        personalOp = personalOperativo.objects.get(correo=correo)
+
+        if request.method == 'GET':
+            personalOp_serializer = PersonalOperativoSerializer(personalOp)
+            return JsonResponse(personalOp_serializer.data)
+        
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
 
 
 @api_view(['PUT'])
@@ -230,6 +286,32 @@ def actualizar_pedido_servicio(request, id_pedido):
 
     except servicio.DoesNotExist:
         return JsonResponse({'message' : 'El pedido no existe'}, status=status.HTTP_404_NOT_FOUND)
+        
+@api_view(['GET'])
+@csrf_exempt
+def solicitarServicioPorUsuario(request,id_cliente):
+    if request.method == 'GET':
+        solicitud_Servicio = pedido.objects.filter(cliente_solicitante=id_cliente)
+
+        id_Pedido = request.GET.get('idPedido', None)
+        if id_Pedido is not None:
+            solicitud_Servicio = solicitud_Servicio.filter(id_Pedido_icontains=id_Pedido)
+
+        solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+        return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
+
+@api_view(['GET'])
+@csrf_exempt
+def solicitarIDEstadoServicio(request,nombre_servicio):
+    if request.method == 'GET':
+        id_estado = estadoPedido.objects.filter(estado=nombre_servicio).values().first()
+        
+        #id_Pedido = request.GET.get('idPedido', None)
+        if (id_estado):
+            #solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+            return JsonResponse({'data':id_estado,'status':status.HTTP_200_OK}, safe=False)
+        else:
+            return JsonResponse({'mensaje':'no encontrado','status':status.HTTP_400_BAD_REQUEST})
 
 # -------------------------------------------- Fin ------------------------------------------------------------
 

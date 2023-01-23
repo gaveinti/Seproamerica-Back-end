@@ -11,23 +11,30 @@ urlpatterns = [
     re_path(r'^api/servicio_seleccionar_actualizar_eliminar/(?P<nombre_Servicio>[a-zA-Z_]+)/$', views.servicio_seleccionar_actualizar_eliminar),
     re_path(r'^api/actualizar_pedido_servicio/(?P<id_pedido>[0-9]+)/$', views.actualizar_pedido_servicio),
 
-    #actualizar_pedido_servicio
+    #obtenerAdministrador_especifico
 
     re_path(r'^api/obtenerServicio$', views.obtenerServicio),
     re_path(r'^api/solicitarServicio$', views.solicitarServicio),
+    re_path(r'^api/solicitarServicio/(?P<id_cliente>[0-9]+)/$', views.solicitarServicioPorUsuario),
+    re_path(r'^api/solicitarIdEstado/(?P<nombre_servicio>[A-Za-z]+)/$', views.solicitarIDEstadoServicio),
+
 
     re_path(r'^api/obtenerTodoPersonalOperativo$', views.obtenerTodoPersonalOperativo),
     re_path(r'^api/eliminarPersonalOperativo/(?P<cedula_PersonalOp>[0-9]+)/$', views.eliminarPersonalOperativo),
     re_path(r'^api/obtener_personalop_especifico/(?P<cedula_PersonalOp>[0-9]+)/$', views.obtener_personalop_especifico),
+    re_path(r'^api/verificar_personal_op/(?P<correo>\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.verificar_personal_op),
     re_path(r'^api/actualizar_personalop/(?P<cedula_PersonalOp>[0-9]+)/$', views.actualizar_personalop),
 
   
     #url(r'^api/usuarioRegistro$', views.usuario_Registro_Datos)
     re_path(r'^api/personalAdminRegistro$', views.adminRegistro),
-    re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador),
+    re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin_or_id>[0-9]+)/$', views.obtenerAdministrador),
+    re_path(r'^api/obtenerAdministrador_especifico/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador_especifico),
+    re_path(r'^api/getAllAdmins$', views.obtenerTodosAdministradores),
+
+    
 
     re_path(r'^api/personalOperativoRegistro$', views.personalOpRegistro),
-
 
     re_path(r'api/visualizarPersonal/', views.personalApi),
     re_path(r'api/visualizarPersonal/[0-9]+',views.personalApi),
