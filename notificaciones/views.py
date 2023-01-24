@@ -61,17 +61,22 @@ def guardar_token_movil(request):
     if request.method=='POST':
         data=request.data
         user= Usuario.objects.filter(cedula=data['cedula']).first()
+
         if(user): 
             print("user:",user)
             print("data:",data)
             print("data:",data['token'])
                     
             
-            qs= TokenNotificacion(
+            if(TokenNotificacion.objects.filter(token_icontains=data["token"])):
+                print("token ya registrado")
+            else:
+                qs= TokenNotificacion(
                 token=data['token'],
                 usuario=user
-            )
-            qs.save()
+                )
+                qs.save()
+            
             return JsonResponse({'data':'ok'})
 
 @api_view(['GET'])
