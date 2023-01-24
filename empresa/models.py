@@ -161,7 +161,6 @@ class pedido(models.Model):
     cantidad_vehiculos = models.IntegerField(blank=True, null=True)
     detalle = models.CharField(max_length=1000)
     candado_Satelital=models.BooleanField(blank=True,null=True)
-    detalle = models.CharField(max_length=300)
     estado = models.ForeignKey(estadoPedido, on_delete=models.CASCADE)
     metodo_Pago = models.ForeignKey(metodoPago, on_delete=models.CASCADE)
     idServicio = models.ForeignKey(servicio, on_delete=models.CASCADE)
