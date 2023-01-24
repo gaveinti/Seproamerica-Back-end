@@ -81,6 +81,15 @@ def obtener_tokens(request):
         print(TokenNotificacion.objects.all().values_list('token'))
         return JsonResponse({'tokens':list(qs)},safe=False)
 
+@api_view(['GET'])
+
+def obtener_token(request,cedula):
+    if request.method=='GET':
+        qs= TokenNotificacion.objects.filter(usuario_id=cedula).values_list('token',flat=True)
+        print(TokenNotificacion.objects.filter(usuario_id=cedula).values_list('token',flat=True))
+        return JsonResponse({'res':list(qs)},safe=False)
+
+
 
 @api_view(['POST'])
 @csrf_exempt  
