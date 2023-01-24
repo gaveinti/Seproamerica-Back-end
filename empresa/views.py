@@ -386,6 +386,19 @@ def obtenerCliente(request, cedula_Cliente):
     except cliente.DoesNotExist:
         return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def obtener_cliente_porId(request,id):
+    try: 
+        cliente_A_Encontrar = cliente.objects.get(idCliente=id)
+
+        if request.method == 'GET':
+            cliente_A_Encontrar_serializer = ClienteSerializer(cliente_A_Encontrar)
+            return JsonResponse(cliente_A_Encontrar_serializer.data)
+
+    except cliente.DoesNotExist:
+        return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+
 # Create your views here.
 @api_view(['GET', 'POST'])
 @csrf_exempt

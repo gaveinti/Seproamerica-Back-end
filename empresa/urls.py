@@ -9,6 +9,7 @@ urlpatterns = [
     re_path(r'^api/clienteRegistro$', views.clienteRegistro),
     re_path(r'^api/obtenerCliente/(?P<cedula_Cliente>[0-9]+)/$', views.obtenerCliente),
     re_path(r'^api/servicio_seleccionar_actualizar_eliminar/(?P<nombre_Servicio>[a-zA-Z_]+)/$', views.servicio_seleccionar_actualizar_eliminar),
+    re_path(r'^api/obtener_cliente_porId/(?P<id>[0-9]+)/$', views.obtener_cliente_porId),
     re_path(r'^api/actualizar_pedido_servicio/(?P<id_pedido>[0-9]+)/$', views.actualizar_pedido_servicio),
 
     #obtenerAdministrador_especifico
