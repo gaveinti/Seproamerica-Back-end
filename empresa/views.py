@@ -396,7 +396,7 @@ def obtener_cliente_porId(request,id):
             data_cliente=usuario.objects.filter(cedula=cliente_A_Encontrar_serializer.data['cedula']).first()
             usuarios_serializer = UsuarioSerializer(data_cliente)
             return JsonResponse({
-                'cliente':cliente_A_Encontrar_serializer,
+                'cliente':cliente_A_Encontrar_serializer.data,
                 'data_cliente':usuarios_serializer.data
             })
 
