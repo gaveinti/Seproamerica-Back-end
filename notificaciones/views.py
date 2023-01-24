@@ -68,7 +68,7 @@ def guardar_token_movil(request):
             print("data:",data['token'])
                     
             
-            if(TokenNotificacion.objects.filter(token_icontains=data["token"])):
+            if TokenNotificacion.objects.filter(token=data["token"]).first():
                 print("token ya registrado")
             else:
                 qs= TokenNotificacion(
@@ -77,7 +77,7 @@ def guardar_token_movil(request):
                 )
                 qs.save()
             
-            return JsonResponse({'data':'ok'})
+                return JsonResponse({'data':'ok'})
 
 @api_view(['GET'])
 def obtener_tokens(request):
