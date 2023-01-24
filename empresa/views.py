@@ -314,6 +314,20 @@ def solicitarIDEstadoServicio(request,nombre_servicio):
         else:
             return JsonResponse({'mensaje':'no encontrado','status':status.HTTP_400_BAD_REQUEST})
 
+
+@api_view(['GET'])
+@csrf_exempt
+def obtener_personal_porId(request,id):
+    try:
+        personalOp = personalOperativo.objects.get(idPersonal=id)
+
+        if request.method == 'GET':
+            personalOp_serializer = PersonalOperativoSerializer(personalOp)
+            return JsonResponse(personalOp_serializer.data)
+        
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['GET'])
 @csrf_exempt
 def solicitarPedidoAsigados(request,cedula):

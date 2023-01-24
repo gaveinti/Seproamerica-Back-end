@@ -26,6 +26,7 @@ urlpatterns = [
     re_path(r'^api/obtenerTodoPersonalOperativo$', views.obtenerTodoPersonalOperativo),
     re_path(r'^api/eliminarPersonalOperativo/(?P<cedula_PersonalOp>[0-9]+)/$', views.eliminarPersonalOperativo),
     re_path(r'^api/obtener_personalop_especifico/(?P<cedula_PersonalOp>[0-9]+)/$', views.obtener_personalop_especifico),
+    re_path(r'^api/obtener_personal_porId/(?P<id>[0-9]+)/$', views.obtener_personal_porId),
     re_path(r'^api/verificar_personal_op/(?P<correo>\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$', views.verificar_personal_op),
     re_path(r'^api/actualizar_personalop/(?P<cedula_PersonalOp>[0-9]+)/$', views.actualizar_personalop),
 
