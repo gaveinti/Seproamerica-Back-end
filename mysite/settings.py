@@ -122,15 +122,15 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'seproamerica2022$seproamericadb',
         'USER': 'seproamerica2022',
         'PASSWORD': 'Admin2022',
         'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com',
         #'PORT': '3306',
-        #'OPTIONS':{
-        #    'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", 'charset': 'utf8mb4',
-        #},
-        
+        'OPTIONS':{
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'", 'charset': 'utf8mb4',
+        },
 
     }
 }
@@ -152,7 +152,12 @@ desarrollo
 '''
 '''
 produccion
-        
+        'NAME': 'seproamerica2022$seproamericadb',
+        'USER': 'seproamerica2022',
+        'PASSWORD': 'Admin2022',
+        'HOST': 'seproamerica2022.mysql.pythonanywhere-services.com'
+        #'PORT': '3306',
+
         'NAME': 'seproamerica2022$seproamericadb',
         'USER': 'seproamerica2022',
         'PASSWORD': 'Admin2022',
