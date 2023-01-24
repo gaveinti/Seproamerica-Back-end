@@ -393,7 +393,12 @@ def obtener_cliente_porId(request,id):
 
         if request.method == 'GET':
             cliente_A_Encontrar_serializer = ClienteSerializer(cliente_A_Encontrar)
-            return JsonResponse(cliente_A_Encontrar_serializer.data)
+            data_cliente=usuario.objects.filter(cedula=cliente_A_Encontrar_serializer.data['cedula']).first()
+            usuarios_serializer = UsuarioSerializer(data_cliente)
+            return JsonResponse({
+                'cliente':cliente_A_Encontrar_serializer,
+                'data_cliente':usuarios_serializer.data
+            })
 
     except cliente.DoesNotExist:
         return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
