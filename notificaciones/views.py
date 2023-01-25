@@ -115,7 +115,27 @@ def notificar_FCM(request):
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
             print(result)
             return JsonResponse({'data':'ok'})
- 
+@api_view(['POST'])
+@csrf_exempt  
+def notificar_individual_FCM(request):
+        if request.method=='POST':
+            API_KEY_FCM=request.data['API_KEY_FCM']
+            titulo=request.data['titulo']
+            descripcion=request.data['descripcion']
+            _cedula=request.data['cedula']
+            print(API_KEY_FCM)
+
+            token_ids_registration= TokenNotificacion.objects.filter(cedula=_cedula).values_list('token',flat=True)
+            push_service = FCMNotification(api_key=API_KEY_FCM)
+
+            # Send to multiple devices by passing a list of ids.
+            registration_ids = list(token_ids_registration)
+            message_title = titulo
+            message_body = descripcion
+            result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
+            print(result)
+            return JsonResponse({'data':'ok'})
+  
 
 @api_view(['POST'])
 @csrf_exempt 
