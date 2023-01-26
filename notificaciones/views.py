@@ -122,10 +122,10 @@ def notificar_individual_FCM(request):
             API_KEY_FCM=request.data['API_KEY_FCM']
             titulo=request.data['titulo']
             descripcion=request.data['descripcion']
-            _cedula=request.data['cedula']
+            cedula_id=request.data['cedula']
             print(API_KEY_FCM)
 
-            token_ids_registration= TokenNotificacion.objects.filter(cedula=_cedula).values_list('token',flat=True)
+            token_ids_registration= TokenNotificacion.objects.filter(cedula=cedula_id).values_list('token',flat=True)
             push_service = FCMNotification(api_key=API_KEY_FCM)
 
             # Send to multiple devices by passing a list of ids.
