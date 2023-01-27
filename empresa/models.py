@@ -142,7 +142,7 @@ class servicio(models.Model):
                 return self.nombreServicio
 
 class pedido(models.Model):
-    idPedido = models.AutoField(primary_key=True)
+    idPedido = models.IntegerField(primary_key=True)
     nombre_Servicio = models.CharField(max_length=50)
     costo = models.FloatField()
     fecha_Solicitud = models.DateTimeField()
