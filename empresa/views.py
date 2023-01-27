@@ -365,6 +365,38 @@ def usuarioRegistro(request):
         usuarios_serializer = UsuarioSerializer(usuarios, many=True)
         return JsonResponse(usuarios_serializer.data, safe=False)
 
+#Funcion para obtener cliente de tabla clientes
+@api_view(['GET'])
+@csrf_exempt
+def obtener_cliente_tabla_cliente(request, id_cliente):
+
+    try: 
+        cliente_A_Encontrar = cliente.objects.get(idCliente=id_cliente)
+
+        if request.method == 'GET':
+            cliente_A_Encontrar_serializer = ClienteSerializer(cliente_A_Encontrar)
+            return JsonResponse(cliente_A_Encontrar_serializer.data)
+        
+    except cliente.DoesNotExist:
+        return JsonResponse({'message:': 'El cliente no existe'}, status= status.HTTP_404_NOT_FOUND)
+
+#Funcion para obtener datos de cliente de la tabla de usuario
+@api_view(['GET'])
+@csrf_exempt
+def obtener_cliente_tabla_usuario(request, cedula_cliente):
+
+    try:
+        usuario_A_Encontrar = usuario.objects.get(cedula=cedula_cliente)
+
+        if request.method == 'GET':
+            usuario_A_Encontrar_serializer = UsuarioSerializer(usuario_A_Encontrar)
+            return JsonResponse(usuario_A_Encontrar_serializer.data)
+    
+    except usuario.DoesNotExist:
+        return JsonResponse({'message': 'El usuario no existe'}, status= status.HTTP_404_NOT_FOUND)
+
+
+
 
 #Función para obtener datos de un usuario para validacion en inicio sesion
 @api_view(['GET', 'PUT'])

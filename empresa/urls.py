@@ -31,8 +31,8 @@ urlpatterns = [
     re_path(r'^api/obtenerAdministrador/(?P<cedula_Admin_or_id>[0-9]+)/$', views.obtenerAdministrador),
     re_path(r'^api/obtenerAdministrador_especifico/(?P<cedula_Admin>[0-9]+)/$', views.obtenerAdministrador_especifico),
     re_path(r'^api/getAllAdmins$', views.obtenerTodosAdministradores),
-
-    
+    re_path(r'^api/obtener_cliente_tabla_cliente/(?P<id_cliente>[0-9]+)/$', views.obtener_cliente_tabla_cliente),
+    re_path(r'^api/obtener_cliente_tabla_usuario/(?P<cedula_cliente>[0-9]+)/$', views.obtener_cliente_tabla_usuario),
 
     re_path(r'^api/personalOperativoRegistro$', views.personalOpRegistro),
 
