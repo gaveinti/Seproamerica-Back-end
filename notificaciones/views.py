@@ -61,18 +61,23 @@ def guardar_token_movil(request):
     if request.method=='POST':
         data=request.data
         user= Usuario.objects.filter(cedula=data['cedula']).first()
+
         if(user): 
             print("user:",user)
             print("data:",data)
             print("data:",data['token'])
                     
             
-            qs= TokenNotificacion(
+            if TokenNotificacion.objects.filter(token=data["token"]).first():
+                print("token ya registrado")
+            else:
+                qs= TokenNotificacion(
                 token=data['token'],
                 usuario=user
-            )
-            qs.save()
-            return JsonResponse({'data':'ok'})
+                )
+                qs.save()
+            
+                return JsonResponse({'data':'ok'})
 
 @api_view(['GET'])
 def obtener_tokens(request):
@@ -110,7 +115,39 @@ def notificar_FCM(request):
             result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body)
             print(result)
             return JsonResponse({'data':'ok'})
- 
+@api_view(['POST'])
+@csrf_exempt  
+def notificar_individual_FCM(request):
+        if request.method=='POST':
+            API_KEY_FCM=request.data['API_KEY_FCM']
+            titulo=request.data['titulo']
+            descripcion=request.data['descripcion']
+            cedula_id=request.data['cedula']
+            id=request.data['id']
+
+            print(API_KEY_FCM)
+
+            token_ids_registration= TokenNotificacion.objects.filter(usuario=cedula_id).values_list('token',flat=True)
+            print("2")
+            push_service = FCMNotification(api_key=API_KEY_FCM)
+            print("3")
+            # Send to multiple devices by passing a list of ids.
+            registration_ids = list(token_ids_registration)
+            print("4")
+
+            message_title = titulo
+            message_body = descripcion
+            data_message = {
+                                "id_type" : id
+                            }
+            print("5")
+            result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body,data_message=data_message)
+            print("========")
+            print(result)
+            print(token_ids_registration)
+            print(registration_ids)
+            return JsonResponse({'data':'ok'})
+  
 
 @api_view(['POST'])
 @csrf_exempt 

@@ -298,6 +298,7 @@ def solicitarServicioPorUsuario(request,id_cliente):
             solicitud_Servicio = solicitud_Servicio.filter(id_Pedido_icontains=id_Pedido)
 
         solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+
         return JsonResponse(solicitud_Servicio_serializer.data, safe=False)
 
 @api_view(['GET'])
@@ -312,6 +313,48 @@ def solicitarIDEstadoServicio(request,nombre_servicio):
             return JsonResponse({'data':id_estado,'status':status.HTTP_200_OK}, safe=False)
         else:
             return JsonResponse({'mensaje':'no encontrado','status':status.HTTP_400_BAD_REQUEST})
+
+
+@api_view(['GET'])
+@csrf_exempt
+def obtener_personal_porId(request,id):
+    try:
+        personalOp = personalOperativo.objects.get(idPersonal=id)
+
+        if request.method == 'GET':
+            personalOp_serializer = PersonalOperativoSerializer(personalOp)
+            return JsonResponse(personalOp_serializer.data)
+        
+    except personalOperativo.DoesNotExist:
+        return JsonResponse({'message': 'El personal operativo no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+@csrf_exempt
+def solicitarPedidoAsigados(request,cedula):
+        if request.method == 'GET':
+            try:
+                personalOp = personalOperativo.objects.get(numCedula=cedula)
+                personalOp_serializer = PersonalOperativoSerializer(personalOp)
+                solicitud_Servicio = pedido.objects.filter(personal_Encargado=personalOp_serializer.data['idPersonal'])
+                print(personalOp.idPersonal)
+                print(personalOp_serializer.data['idPersonal'])
+                
+                id_Pedido = request.GET.get('idPedido', None)
+                if id_Pedido is not None:
+                    solicitud_Servicio = solicitud_Servicio.filter(id_Pedido_icontains=id_Pedido)
+
+                solicitud_Servicio_serializer = PedidoSerializer(solicitud_Servicio, many=True)
+
+                    
+                return JsonResponse({
+                    'empleado':personalOp_serializer.data,
+                    'pedido':solicitud_Servicio_serializer.data
+                })
+
+            except personalOperativo.DoesNotExist:
+                return JsonResponse({'message' : 'El empleado no existe'}, status=status.HTTP_404_NOT_FOUND)         
+            #COMPLETAR METODO PARA TRAER PEDIDOS DE EMPLEADO ASIGNADO
+
 
 # -------------------------------------------- Fin ------------------------------------------------------------
 
@@ -342,6 +385,24 @@ def obtenerCliente(request, cedula_Cliente):
 
     except cliente.DoesNotExist:
         return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def obtener_cliente_porId(request,id):
+    try: 
+        cliente_A_Encontrar = cliente.objects.get(idCliente=id)
+
+        if request.method == 'GET':
+            cliente_A_Encontrar_serializer = ClienteSerializer(cliente_A_Encontrar)
+            data_cliente=usuario.objects.filter(cedula=cliente_A_Encontrar_serializer.data['cedula']).first()
+            usuarios_serializer = UsuarioSerializer(data_cliente)
+            return JsonResponse({
+                'cliente':cliente_A_Encontrar_serializer.data,
+                'data_cliente':usuarios_serializer.data
+            })
+
+    except cliente.DoesNotExist:
+        return JsonResponse({'message': 'El cliente no existe'}, status=status.HTTP_404_NOT_FOUND)
+
 
 # Create your views here.
 @api_view(['GET', 'POST'])
