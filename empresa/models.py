@@ -130,7 +130,7 @@ class tipoServicio(models.Model):
     tarifa = models.CharField(max_length=100)
 
 class servicio(models.Model):
-    idServicio = models.AutoField(primary_key=True)
+    idServicio = models.IntegerField(primary_key=True)
     nombreServicio = models.CharField(max_length=50)
     costo = models.FloatField()
     detalles = models.CharField(max_length=1000)
@@ -142,7 +142,7 @@ class servicio(models.Model):
                 return self.nombreServicio
 
 class pedido(models.Model):
-    idPedido = models.IntegerField(primary_key=True)
+    idPedido = models.AutoField(primary_key=True)
     nombre_Servicio = models.CharField(max_length=50)
     costo = models.FloatField()
     fecha_Solicitud = models.DateTimeField()
