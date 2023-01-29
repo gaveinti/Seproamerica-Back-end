@@ -141,7 +141,7 @@ def notificar_individual_FCM(request):
                                 "id_type" : id
                             }
             print("5")
-            result = push_service.notify_multiple_devices(registration_ids=registration_ids, message_title=message_title, message_body=message_body,data_message=data_message)
+            result = push_service.notify_single_device(registration_id=registration_ids[0], message_title=message_title, message_body=message_body,data_message=data_message)
             print("========")
             print(result)
             print(token_ids_registration)
